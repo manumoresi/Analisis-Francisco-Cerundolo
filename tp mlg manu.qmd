@@ -8,9 +8,9 @@ editor: visual
 
 ## Introducción
 
-El tenis es uno de los deportes más populares del mundo, jugado por millones de personas a lo largo de todo el planeta, y se caracteriza por la destreza técnica, el esfuerzo físico y el análisis estratégico que requiere. 
+El tenis es uno de los deportes más populares del mundo, jugado por millones de personas a lo largo de todo el planeta, y se caracteriza por la destreza técnica, el esfuerzo físico y el análisis estratégico que requiere.
 
-A nivel profesional, el circuito mas prestigioso es el de la ATP (Association of Tennis Professionals), en donde estan los jugadores mas prestigiosos del planeta, compitiendo en diferentes torneos de diferentes categorías y superficies (polvo de ladrillo, cesped y canchas duras). En este circuito existe un ranking de jugadores, el cual los ubica segun sus resultados en el año, y se actualiza cada semana, siendo la posicion nº 1 el mejor tenista de la actualidad. 
+A nivel profesional, el circuito mas prestigioso es el de la ATP (Association of Tennis Professionals), en donde estan los jugadores mas prestigiosos del planeta, compitiendo en diferentes torneos de diferentes categorías y superficies (polvo de ladrillo, cesped y canchas duras). En este circuito existe un ranking de jugadores, el cual los ubica segun sus resultados en el año, y se actualiza cada semana, siendo la posicion nº 1 el mejor tenista de la actualidad.
 
 Argentina ha producido una gran cantidad de tenistas destacados a lo largo de los años, y uno de los más prometedores de la actualidad es Francisco Cerúndolo. Nacido el 13 de agosto de 1998 en Buenos Aires, Cerúndolo ha ascendido rápidamente en el ranking ATP gracias a su consistencia, habilidades técnicas y mentalidad competitiva. Su estilo de juego, caracterizado por un potente golpe de derecha y su movilidad en la cancha, lo ha ayudado a destacarse en torneos importantes, especialmente en superficies de polvo de ladrillo, donde ha tenido varios de sus mejores desempeños.
 
@@ -18,39 +18,11 @@ Cerúndolo ha logrado consolidarse entre los mejores tenistas argentinos de la n
 
 En este informe, se va a trabajar con una base de datos de 146 partidos, todos los partidos de la carrera de Fran desde su debut en 2020 hasta mayo del 2024 (no icluye el mencionado titulo en Umag de ese año) y cuenta con las siguientes variables:
 
-surface
-tourney_level
-winner_name
-loser_name
-best_of
-round
-minutes
-fran_win
-opp_hand
-opp_age
-opp_ht
-opp_rank
-fran_rank
-dif_rank
-fran_age
-pct_fran_1stIn
-pct_opp_1stIn
-pct_fran_1stWon
-pct_opp_1stWon
-pct_fran_2ndWon
-pct_opp_2ndWon
-pct_fran_df
-pct_opp_df
-pct_fran_ace
-pct_opp_ace
-pct_fran_bp_saved
-pct_opp_bp_saved
-pct_fran_bp_wins
-pct_opp_bp_wins
+surface tourney_level winner_name loser_name best_of round minutes fran_win opp_hand opp_age opp_ht opp_rank fran_rank dif_rank fran_age pct_fran_1stIn pct_opp_1stIn pct_fran_1stWon pct_opp_1stWon pct_fran_2ndWon pct_opp_2ndWon pct_fran_df pct_opp_df pct_fran_ace pct_opp_ace pct_fran_bp_saved pct_opp_bp_saved pct_fran_bp_wins pct_opp_bp_wins
 
 ## Objetivos
 
-El objetivo de este trabajo es modelar la probabilidad de que Cerúndolo gane o no un partido en el circuito, basandose en algunas de las variables ya mencionadas. El análisis de estos factores no solo permite entender mejor los resultados, sino que también ayuda a prever cómo podría desenvolverse en futuros encuentros, lo que es útil tanto para entrenadores como para analistas deportivos. 
+El objetivo de este trabajo es modelar la probabilidad de que Cerúndolo gane o no un partido en el circuito, basandose en algunas de las variables ya mencionadas. El análisis de estos factores no solo permite entender mejor los resultados, sino que también ayuda a prever cómo podría desenvolverse en futuros encuentros, lo que es útil tanto para entrenadores como para analistas deportivos.
 
 En resumen, Francisco Cerúndolo es una figura clave en el tenis argentino actual, y su evolución en el circuito profesional será de gran interés para quienes siguen el deporte, y lo que se buscará en este informe es detallar las claves en esta evolución.
 
@@ -64,7 +36,8 @@ library(tidyverse)
 library(plotly)
 library(glmtoolbox)
 library(statmod)
-#cerundolo_final1 <- read_excel("C:/Users/Usuario/Downloads/cerundolo_final1.xlsx")
+
+cerundolo_final1 <- read_excel("C:/Users/Usuario/Desktop/Estadistica/Analisis-Francisco-Cerundolo/cerundolo_final1.xlsx")
 
 cerundolo_final1 = subset(cerundolo_final1, select = -c(tourney_id,tourney_name,draw_size,tourney_date,match_num,winner_id,winner_seed,winner_entry,winner_ioc,loser_id,loser_seed,loser_entry,loser_ioc,score,winner_rank_points,loser_rank_points,w_SvGms,l_SvGms))
 
@@ -234,8 +207,12 @@ g1=mosaic(
   data = cerundolo_final1, 
   direction = "v",
   highlighting = "opp_hand", 
-  highlighting_fill = c("purple2", "lightpink")
-)
+  highlighting_fill = c("steelblue1","steelblue4"),
+  labeling = labeling_border, 
+       labeling_args = list(gp_labels = gpar(col = "black", fontsize = 12),  
+                            gp_varnames = gpar(col = "white", fontsize = 14)), 
+       main = "Resultados según la mano habil del rival")
+
 
 tabla_cruzada <- table(cerundolo_final1$fran_win, cerundolo_final1$opp_hand)
 prop_conjunta <- prop.table(tabla_cruzada)
@@ -261,7 +238,8 @@ ggplot(cerundolo_final1) +
   geom_density_ridges() +
   labs(x = "Edad del rival (años)", y = "Resultado") +
   theme_ridges() + 
-  theme(legend.position = "none")
+  theme(legend.position = "none") +
+  scale_fill_manual(values = c("Perdió"="steelblue1","Ganó"="steelblue4"))
 ```
 
 ```{r, echo=FALSE, warning=FALSE, fig.align='center'}
@@ -273,7 +251,8 @@ ggplot(cerundolo_final1) +
   geom_density_ridges() +
   labs(x = "Altura del rival (cm)", y = "Resultado") +
   theme_ridges() + 
-  theme(legend.position = "none")
+  theme(legend.position = "none")+
+  scale_fill_manual(values = c("Perdió"="steelblue1","Ganó"="steelblue4"))
 ```
 
 Tanto la edad como la altura del rival no parecen ser muy influyentes a la hora de evidenciar la posibilidad de un resultado. Ver si se puede agregar una linea punteada que indique la media, o ver si se puede hacer interactivo
@@ -285,7 +264,8 @@ ggplot(cerundolo_final1) +
   aes(y = minutes, x = fran_win, fill = fran_win) +
   geom_boxplot() +
   labs(x = "Resultado", y = "Duración del partido (min)") +
-  theme(legend.position = "none")
+  theme(legend.position = "none")+
+  scale_fill_manual(values = c("Perdió"="steelblue1","Ganó"="steelblue4"))
 ```
 
 Al observar las distribuciones en la duracion de los partidos que gano y que perdio, parecen no diferir demasiado, por lo que podria no ser un factor influyente en la probabilidad de ganar un partido.
@@ -304,7 +284,8 @@ g1=ggplot(cerundolo_final1) +
              aes(x = 61, y = 0), color = "blue", size = 3) +
   # Punto en el valor 36 para el gráfico de la derecha
   geom_point(data = subset(cerundolo_final1, fran_win == levels(cerundolo_final1$fran_win)[2]), 
-             aes(x = 36, y = 0), color = "blue", size = 3)
+             aes(x = 36, y = 0), color = "blue", size = 3)+
+  scale_fill_manual(values = c("Perdió"="steelblue1","Ganó"="steelblue4"))
 
 ggplotly(g1)
 
@@ -317,14 +298,15 @@ La mediana del ranking de los oponentes cuando Fran gana es de 61, mientras que 
 nivel del torneo
 
 ```{r, echo=FALSE, warning=FALSE, fig.align='center'}
-g2=ggplot(cerundolo_final1) +
+ggplot(cerundolo_final1) +
   aes(x = fran_win, fill = tourney_level) +
   geom_bar(position = "dodge") +
-  labs(x = "Resultado", y = "Frecuencia")
+  labs(x = "Resultado", y = "Frecuencia", fill = "Nivel del torneo") +
+  scale_fill_manual(values = c("A"="darkslategray3", "D"="seagreen", "G"="indianred2", "M"="goldenrod2"),labels = c("ATP 250 y ATP 500", "Copa Davis", "Grand Slam","Masters 1000"))
 
-ggplotly(g2)
+
+
 ```
-
 Parece no influir el nivel del torneo
 
 dos tablas para cuando gano y perdio para ver las estadisticas del juego
@@ -353,7 +335,7 @@ m14=mean(cerundolo_final1$pct_opp_bp_wins)
 
 Dejamos solo las variables de interes
 
-```{r}
+```{r, echo=FALSE, warning=FALSE, results='hide'}
 cerundolo_modelo= subset(cerundolo_final1, select= c(surface,tourney_level,minutes,fran_win,opp_hand,opp_ht,opp_age,dif_rank,pct_fran_1stIn,pct_opp_1stIn,pct_fran_1stWon,pct_opp_1stWon,pct_fran_2ndWon,pct_opp_2ndWon,pct_fran_df,pct_opp_df,pct_fran_ace,pct_opp_ace,pct_fran_bp_wins,pct_opp_bp_wins,pct_fran_bp_saved,pct_opp_bp_saved))
 
 cerundolo_modelo = na.omit(cerundolo_modelo)
@@ -363,23 +345,22 @@ Planteamos todos los modelos univariados y vemos que variables son significativa
 
 Paso a paso
 
-```{r}
+```{r, echo=FALSE, warning=FALSE, results='hide'}
 library(MASS)
 # Modelo completo
 cerundolo_modelo$fran_win1 = ifelse(cerundolo_modelo$fran_win == "Ganó",1,0)
 cerundolo_modelo = subset(cerundolo_modelo, select = -c(fran_win))
 
-modelo_completo <- glm(fran_win ~ ., data = cerundolo_modelo, family = binomial(link = "probit"))
+modelo_completo <- glm(fran_win1 ~ ., data = cerundolo_modelo, family = binomial(link = "logit"))
 
 # Selección de variables paso a paso basada en AIC
 modelo_seleccionado <- step(modelo_completo, direction = "backward")
 ```
 
-Luego de una larga y detallada selección de modelo, se retienen las siguientes variables: Edad del oponente, diferencia en el ranking, porcentaje de puntos ganados con el primer servicio, porcentaje de puntos ganados del rival con el primer servicio,porcentaje de puntos ganados por el rival con el segundo servicio, porcentaje de puntos de break point ganados por Fran y la cantidad de puntos ganados en el break point por el rival
+Luego de una larga y detallada selección de modelo, se retienen las siguientes variables: Edad del oponente, porcentaje de puntos ganados con el primer servicio, porcentaje de puntos ganados del rival con el primer servicio, porcentaje de puntos ganados por el rival con el segundo servicio, porcentaje de puntos de break point ganados por Fran y el porcentaje de puntos de break point ganados por el rival.
 
-```{r}
-modelo_final = glm(fran_win ~ pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + 
-    pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo,family = binomial(link="logit"))
+```{r, echo=FALSE, warning=FALSE, results='hide'}
+modelo_final = glm(fran_win1 ~ opp_age + pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo,family = binomial(link="logit"))
 
 summary(modelo_final)
 
@@ -395,20 +376,19 @@ hltest(modelo_final)
 
 ### Test de hipótesis
 
-```{r}
+```{r, echo=FALSE, warning=FALSE, results='hide'}
 
 pred.logit<-predict(modelo_final)
 cerundolo_modelo$pred.2.logit<-pred.logit*pred.logit
 
-modelo_logit.2 <- glm(fran_win ~ pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + 
-    pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins+ pred.2.logit, data=cerundolo_modelo, family=binomial(link="logit"))
+modelo_logit.2 <- glm(fran_win1 ~ opp_age + pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins+ pred.2.logit, data=cerundolo_modelo, family=binomial(link="logit"))
 
 anova(modelo_final, modelo_logit.2, test="LRT")
 
 
 ```
 
-parece ser adecuada la funcion de enlace
+Parece ser adecuada la funcion de enlace
 
 ## Análisis de residuos
 
@@ -451,8 +431,7 @@ grid.arrange(G1, G2, ncol = 2)
 
 ### Evaluación de la componente aleatoria
 
-Mediante un gráfico QQ puede evaluarse si la distribución supuesta es adecuada.
-la distribucion de la variable latente?
+Mediante un gráfico QQ puede evaluarse si la distribución supuesta es adecuada. la distribucion de la variable latente?
 
 ```{r, fig.width = 4*1.33*2}
 # Gráfico QQ
@@ -465,19 +444,33 @@ G2 <- ggplot(cerundolo_modelo, aes(sample = rQ.final)) +
 G2
 ```
 
-
 ## Evaluación de Linealidad
 
-```{r}
+```{r, echo=FALSE, warning=FALSE, results='hide'}
+
+cerundolo_modelo <- cerundolo_modelo %>%
+  mutate(cat0= cut(opp_age, breaks = c(0, 23, 26, 28, 31, Inf)),
+         ord0= cut(opp_age, breaks = c(0, 23, 26, 28, 31, Inf), labels = F) )
+
+modelo_l1 =glm(fran_win1 ~ cat0 + pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + 
+    pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
+
+modelo_l2=glm(fran_win1 ~ ord0 + pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + 
+    pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
+
+anova(modelo_l2,modelo_l1, test="LRT")
+
+#No rechazo Ho), el efecto es lineal
+
 
 cerundolo_modelo <- cerundolo_modelo %>%
   mutate(cat1= cut(pct_fran_1stWon, breaks = c(0, 0.59, 0.65, 0.693, 0.75, Inf)),
          ord1= cut(pct_fran_1stWon, breaks = c(0, 0.59, 0.65, 0.693, 0.75, Inf), labels = F) )
 
-modelo_l1 =glm(fran_win ~ cat1 + pct_opp_1stWon + pct_fran_2ndWon + 
+modelo_l1 =glm(fran_win1 ~ opp_age + cat1 + pct_opp_1stWon + pct_fran_2ndWon + 
     pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
 
-modelo_l2=glm(fran_win ~ ord1 + pct_opp_1stWon + pct_fran_2ndWon + 
+modelo_l2=glm(fran_win1 ~ opp_age + ord1 + pct_opp_1stWon + pct_fran_2ndWon + 
     pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
 
 anova(modelo_l2,modelo_l1, test="LRT")
@@ -488,10 +481,10 @@ cerundolo_modelo <- cerundolo_modelo %>%
   mutate(cat2= cut(pct_opp_1stWon, breaks = c(0, 0.6, 0.65, 0.7, 0.75, Inf)),
          ord2= cut(pct_opp_1stWon, breaks = c(0, 0.6, 0.65, 0.7, 0.75, Inf), labels = F) )
 
-modelo_l1 =glm(fran_win ~ pct_fran_1stWon + cat2 + pct_fran_2ndWon + 
+modelo_l1 =glm(fran_win1 ~ opp_age + pct_fran_1stWon + cat2 + pct_fran_2ndWon + 
     pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
 
-modelo_l2=glm(fran_win ~ pct_fran_1stWon + ord2 + pct_fran_2ndWon + 
+modelo_l2=glm(fran_win1 ~ opp_age + pct_fran_1stWon + ord2 + pct_fran_2ndWon + 
     pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
 
 anova(modelo_l2,modelo_l1, test="LRT")
@@ -502,10 +495,10 @@ cerundolo_modelo <- cerundolo_modelo %>%
   mutate(cat3= cut(pct_fran_2ndWon, breaks = c(0, 0.4, 0.47, 0.52, 0.59, Inf)),
          ord3= cut(pct_fran_2ndWon, breaks = c(0, 0.4, 0.47, 0.52, 0.59, Inf), labels = F) )
 
-modelo_l1 =glm(fran_win ~ pct_fran_1stWon + pct_opp_1stWon + cat3 + 
+modelo_l1 =glm(fran_win1 ~ opp_age + pct_fran_1stWon + pct_opp_1stWon + cat3 + 
     pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
 
-modelo_l2=glm(fran_win ~ pct_fran_1stWon + pct_opp_1stWon + ord3 + 
+modelo_l2=glm(fran_win1 ~ opp_age + pct_fran_1stWon + pct_opp_1stWon + ord3 + 
     pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
 
 anova(modelo_l2,modelo_l1, test="LRT")
@@ -516,10 +509,9 @@ cerundolo_modelo <- cerundolo_modelo %>%
   mutate(cat4= cut(pct_opp_2ndWon, breaks = c(0, 0.4, 0.45, 0.52, 0.59, Inf)),
          ord4= cut(pct_opp_2ndWon, breaks = c(0, 0.4, 0.45, 0.52, 0.59, Inf), labels = F) )
 
-modelo_l1 =glm(fran_win ~ pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + 
-    cat4 + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
+modelo_l1 =glm(fran_win1 ~ opp_age + pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + cat4 + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
 
-modelo_l2=glm(fran_win ~ pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + 
+modelo_l2=glm(fran_win1 ~ opp_age + pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + 
     ord4 + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
 
 anova(modelo_l2,modelo_l1, test="LRT")
@@ -530,10 +522,10 @@ cerundolo_modelo <- cerundolo_modelo %>%
   mutate(cat5= cut(pct_fran_bp_wins, breaks = c(0, 0.275, 0.375, 0.47, 0.64, Inf)),
          ord5= cut(pct_fran_bp_wins, breaks = c(0, 0.275, 0.375, 0.47, 0.64, Inf), labels = F) )
 
-modelo_l1 =glm(fran_win ~ pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + 
+modelo_l1 =glm(fran_win1 ~ opp_age + pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon +
     pct_opp_2ndWon + cat5 + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
 
-modelo_l2=glm(fran_win ~ pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + 
+modelo_l2=glm(fran_win1 ~ opp_age + pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + 
     pct_opp_2ndWon + ord5 + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
 
 anova(modelo_l2,modelo_l1, test="LRT")
@@ -544,13 +536,15 @@ cerundolo_modelo <- cerundolo_modelo %>%
   mutate(cat6= cut(pct_opp_bp_wins, breaks = c(0, 0.275, 0.375, 0.5, 0.6, Inf)),
          ord6= cut(pct_opp_bp_wins, breaks = c(0, 0.275, 0.375, 0.5, 0.6, Inf), labels = F) )
 
-modelo_l1 =glm(fran_win ~ pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + 
+modelo_l1 =glm(fran_win1 ~ opp_age + pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon +
     pct_opp_2ndWon + pct_fran_bp_wins + cat6, data=cerundolo_modelo, family=binomial(link="logit"))
 
-modelo_l2=glm(fran_win ~ pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + 
+modelo_l2=glm(fran_win1 ~ opp_age + pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + 
     pct_opp_2ndWon + pct_fran_bp_wins + ord6, data=cerundolo_modelo, family=binomial(link="logit"))
 
 anova(modelo_l2,modelo_l1, test="LRT")
+
+#No rechazo Ho), el efecto es lineal
 
 ```
 
@@ -562,4 +556,3 @@ modelo_final = glm(fran_win ~ pct_fran_1stWon + cat2 + pct_fran_2ndWon +
 
 summary(modelo_final)
 ```
-
