@@ -36,6 +36,7 @@ library(tidyverse)
 library(plotly)
 library(glmtoolbox)
 library(statmod)
+library(gridExtra)
 
 cerundolo_final1 <- read_excel("C:/Users/Usuario/Desktop/Estadistica/Analisis-Francisco-Cerundolo/cerundolo_final1.xlsx")
 
@@ -298,15 +299,18 @@ La mediana del ranking de los oponentes cuando Fran gana es de 61, mientras que 
 nivel del torneo
 
 ```{r, echo=FALSE, warning=FALSE, fig.align='center'}
+cerundolo_final1$tourney_level = factor(cerundolo_final1$tourney_level, levels = c("A","M","G","D"))
+
 ggplot(cerundolo_final1) +
   aes(x = fran_win, fill = tourney_level) +
   geom_bar(position = "dodge") +
   labs(x = "Resultado", y = "Frecuencia", fill = "Nivel del torneo") +
-  scale_fill_manual(values = c("A"="darkslategray3", "D"="seagreen", "G"="indianred2", "M"="goldenrod2"),labels = c("ATP 250 y ATP 500", "Copa Davis", "Grand Slam","Masters 1000"))
+  scale_fill_manual(values = c("A"="darkslategray3", "D"="seagreen", "G"="indianred2", "M"="goldenrod2"),labels = c("ATP 250 y ATP 500", "Masters 1000", "Grand Slam", "Copa Davis"))
 
 
 
 ```
+
 Parece no influir el nivel del torneo
 
 dos tablas para cuando gano y perdio para ver las estadisticas del juego
@@ -327,6 +331,117 @@ m12=mean(cerundolo_final1$pct_opp_bp_saved)
 m13=mean(cerundolo_final1$pct_fran_bp_wins)
 m14=mean(cerundolo_final1$pct_opp_bp_wins)
 
+```
+
+### Radar chart
+
+```{r}
+library(fmsb)
+
+
+radar_fran <- cerundolo_final1 %>%
+  select(
+    group = fran_win, #necesario para la funcion ggradar
+    In_1st = pct_fran_1stIn, 
+    Won_1st = pct_fran_1stWon,
+    Won_2nd = pct_fran_2ndWon, 
+    df = pct_fran_df, 
+    aces = pct_fran_ace,
+    bp_win= pct_fran_bp_wins,
+    bp_saved= pct_fran_bp_saved
+    ) %>% 
+  mutate_if(is.numeric, rescale)
+
+
+# Crear subconjuntos de datos para "Ganó" y "Perdió"
+df_gano <- radar_fran[radar_fran$group == "Ganó", c("In_1st", "Won_1st", "Won_2nd", "df", "aces", "bp_win", "bp_saved")]
+df_perdio <- radar_fran[radar_fran$group == "Perdió", c("In_1st", "Won_1st", "Won_2nd", "df", "aces", "bp_win", "bp_saved")]
+
+# Calcular el promedio de las variables para cada grupo
+promedios_gano <- colMeans(df_gano,na.rm = T)
+promedios_perdio <- colMeans(df_perdio,na.rm = T)
+
+# Agregar filas para los valores máximos y mínimos que definan los límites del radar chart
+max_vals <- rep(1, 7)  # Máximo 1 (porque las variables están reescaladas)
+min_vals <- rep(0, 7)  # Mínimo 0
+
+# Crear un data frame con los valores de "Ganó" y "Perdió"
+df_radar <- as.data.frame(rbind(max_vals, min_vals, promedios_gano, promedios_perdio))
+
+# Asignar nombres de fila para el gráfico
+rownames(df_radar) <- c("Max", "Min", "Ganó", "Perdió")
+
+# Colores de las áreas en tonos de azul
+areas <- c(rgb(0, 0, 0.9, 0.25),  # Azul claro (más transparente)
+           rgb(0, 0.5, 1, 0.25)) # Azul más oscuro
+
+# Colores para las líneas en azul
+lineas <- c(rgb(0, 0, 0.9),       # Azul claro
+            rgb(0, 0.5, 1))     # Azul oscuro
+
+# Gráfico de radar
+r1 = radarchart(df_radar,
+           cglty = 1,       # Tipo de línea del grid
+           cglcol = "gray", # Color de las líneas del grid
+           pcol = lineas,   # Color para cada línea (tonos de azul)
+           plwd = 2,        # Ancho para cada línea
+           plty = 1,        # Tipo de línea
+           pfcol = areas)   # Color de las áreas
+
+legend("bottomright",
+       legend = c("Ganó", "Perdió"),
+       bty = "n", pch = 20, col = areas,
+       text.col = "black", pt.cex = 2)
+
+r1
+
+radar_opp <- cerundolo_final1 %>%
+  select(
+    group = fran_win, #necesario para la funcion ggradar
+    In_1st = pct_opp_1stIn, 
+    Won_1st = pct_opp_1stWon,
+    Won_2nd = pct_opp_2ndWon, 
+    df = pct_opp_df, 
+    aces = pct_opp_ace,
+    bp_win= pct_opp_bp_wins,
+    bp_saved= pct_opp_bp_saved
+    ) %>% 
+  mutate_if(is.numeric, rescale)
+
+
+# Crear subconjuntos de datos para "Ganó" y "Perdió"
+df_gano <- radar_opp[radar_opp$group == "Ganó", c("In_1st", "Won_1st", "Won_2nd", "df", "aces", "bp_win", "bp_saved")]
+df_perdio <- radar_opp[radar_opp$group == "Perdió", c("In_1st", "Won_1st", "Won_2nd", "df", "aces", "bp_win", "bp_saved")]
+
+# Calcular el promedio de las variables para cada grupo
+promedios_gano <- colMeans(df_gano,na.rm = T)
+promedios_perdio <- colMeans(df_perdio,na.rm = T)
+
+# Agregar filas para los valores máximos y mínimos que definan los límites del radar chart
+max_vals <- rep(1, 7)  # Máximo 1 (porque las variables están reescaladas)
+min_vals <- rep(0, 7)  # Mínimo 0
+
+# Crear un data frame con los valores de "Ganó" y "Perdió"
+df_radar1 <- as.data.frame(rbind(max_vals, min_vals, promedios_gano, promedios_perdio))
+
+# Asignar nombres de fila para el gráfico
+rownames(df_radar1) <- c("Max", "Min", "Ganó", "Perdió")
+
+# Gráfico de radar
+r2 = radarchart(df_radar1,
+           cglty = 1,       # Tipo de línea del grid
+           cglcol = "gray", # Color de las líneas del grid
+           pcol = lineas,   # Color para cada línea (tonos de azul)
+           plwd = 2,        # Ancho para cada línea
+           plty = 1,        # Tipo de línea
+           pfcol = areas)   # Color de las áreas
+
+legend("bottomright",
+       legend = c("Ganó", "Perdió"),
+       bty = "n", pch = 20, col = areas,
+       text.col = "black", pt.cex = 2)
+
+r2
 ```
 
 ### Modelo Estadístico
@@ -354,7 +469,7 @@ cerundolo_modelo = subset(cerundolo_modelo, select = -c(fran_win))
 modelo_completo <- glm(fran_win1 ~ ., data = cerundolo_modelo, family = binomial(link = "logit"))
 
 # Selección de variables paso a paso basada en AIC
-modelo_seleccionado <- step(modelo_completo, direction = "backward")
+modelo_seleccionado <- step(modelo_completo, direction = "both")
 ```
 
 Luego de una larga y detallada selección de modelo, se retienen las siguientes variables: Edad del oponente, porcentaje de puntos ganados con el primer servicio, porcentaje de puntos ganados del rival con el primer servicio, porcentaje de puntos ganados por el rival con el segundo servicio, porcentaje de puntos de break point ganados por Fran y el porcentaje de puntos de break point ganados por el rival.
@@ -372,6 +487,18 @@ hltest(modelo_final)
 
 ```
 
+La edad del rival tiene un p_value del test de wald de 0.1, podríamos ver si es realmente significativa para el modelo a través de un test de razón de verosimilitud
+
+```{r}
+modelo_cuasi_final = glm(fran_win1 ~ pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo,family = binomial(link="logit"))
+
+anova(modelo_cuasi_final, modelo_final, test="LRT")
+
+#Podríamos sacarla del modelo
+
+modelo_final = glm(fran_win1 ~ pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo,family = binomial(link="logit"))
+```
+
 ## Adecuación de la función de enlace
 
 ### Test de hipótesis
@@ -381,7 +508,7 @@ hltest(modelo_final)
 pred.logit<-predict(modelo_final)
 cerundolo_modelo$pred.2.logit<-pred.logit*pred.logit
 
-modelo_logit.2 <- glm(fran_win1 ~ opp_age + pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins+ pred.2.logit, data=cerundolo_modelo, family=binomial(link="logit"))
+modelo_logit.2 <- glm(fran_win1 ~ pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins+ pred.2.logit, data=cerundolo_modelo, family=binomial(link="logit"))
 
 anova(modelo_final, modelo_logit.2, test="LRT")
 
@@ -392,23 +519,13 @@ Parece ser adecuada la funcion de enlace
 
 ## Análisis de residuos
 
-#### Gráfico de proporciones observadas vs proporciones estimadas bajo modelo logit
-
-```{r}
-### Gráfico de residuos cuantil vs. probabilidades estimadas (ajuste logit)
-ggplot(cerundolo_modelo, aes(y = fran_win, x = fitted(modelo_final))) + 
-  geom_point(fill = "orange", shape = 21, size = 3) +
-  labs(title = "Gráfico de proporciones observadas vs. \nproporciones estimadas", x = "Proporciones estimadas", y = "Proporciones observadas") +
-  theme_minimal()
-```
-
 ### Evaluación de la componente sistemática
 
 ```{r, fig.width = 4*1.33*2}
 # Residuos cuantil
 rQ.final <- qresid(modelo_final)
 
-### Gráfico de residuos cuantil vs. probabilidades estimadas (ajuste cloglog)
+### Gráfico de residuos cuantil vs. probabilidades estimadas (ajuste logit)
 G1 <- ggplot(cerundolo_modelo, aes(y = rQ.final, x = fitted(modelo_final))) + 
   geom_point(fill = "orange", shape = 21, size = 3) +
   geom_hline(yintercept = 0) + ylim(-3, 3) + 
@@ -416,17 +533,7 @@ G1 <- ggplot(cerundolo_modelo, aes(y = rQ.final, x = fitted(modelo_final))) +
   geom_hline(yintercept =  3, linetype = "dashed") +
   labs(title = "Gráfico de residuos cuantil vs. las probabilidades estimadas", x = expression(hat(pi)), y = "Residuos cuantil") +
   theme_minimal()
-
-### Gráfico de residuos cuantil vs. la media estimada (ajuste cloglog)
-G2 <- ggplot(datos_beetles, aes(y = rQ.cloglog, x = mu_cloglog)) + 
-  geom_point(fill = "orange", shape = 21, size = 3) +
-  geom_hline(yintercept = 0) + ylim(-3, 3) + 
-  geom_hline(yintercept = -3, linetype = "dashed") + 
-  geom_hline(yintercept =  3, linetype = "dashed") +
-  labs(title = "Gráfico de residuos cuantil vs. las medias estimadas", x = expression(hat(mu)), y = "Residuos cuantil") +
-  theme_minimal()
-
-grid.arrange(G1, G2, ncol = 2)
+G1
 ```
 
 ### Evaluación de la componente aleatoria
@@ -449,42 +556,28 @@ G2
 ```{r, echo=FALSE, warning=FALSE, results='hide'}
 
 cerundolo_modelo <- cerundolo_modelo %>%
-  mutate(cat0= cut(opp_age, breaks = c(0, 23, 26, 28, 31, Inf)),
-         ord0= cut(opp_age, breaks = c(0, 23, 26, 28, 31, Inf), labels = F) )
-
-modelo_l1 =glm(fran_win1 ~ cat0 + pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + 
-    pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
-
-modelo_l2=glm(fran_win1 ~ ord0 + pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + 
-    pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
-
-anova(modelo_l2,modelo_l1, test="LRT")
-
-#No rechazo Ho), el efecto es lineal
-
-
-cerundolo_modelo <- cerundolo_modelo %>%
   mutate(cat1= cut(pct_fran_1stWon, breaks = c(0, 0.59, 0.65, 0.693, 0.75, Inf)),
          ord1= cut(pct_fran_1stWon, breaks = c(0, 0.59, 0.65, 0.693, 0.75, Inf), labels = F) )
 
-modelo_l1 =glm(fran_win1 ~ opp_age + cat1 + pct_opp_1stWon + pct_fran_2ndWon + 
+modelo_l1 =glm(fran_win1 ~ cat1 + pct_opp_1stWon + pct_fran_2ndWon + 
     pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
 
-modelo_l2=glm(fran_win1 ~ opp_age + ord1 + pct_opp_1stWon + pct_fran_2ndWon + 
+modelo_l2=glm(fran_win1 ~ ord1 + pct_opp_1stWon + pct_fran_2ndWon + 
     pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
 
 anova(modelo_l2,modelo_l1, test="LRT")
 
 #No rechazo Ho), el efecto es lineal
+
 
 cerundolo_modelo <- cerundolo_modelo %>%
   mutate(cat2= cut(pct_opp_1stWon, breaks = c(0, 0.6, 0.65, 0.7, 0.75, Inf)),
          ord2= cut(pct_opp_1stWon, breaks = c(0, 0.6, 0.65, 0.7, 0.75, Inf), labels = F) )
 
-modelo_l1 =glm(fran_win1 ~ opp_age + pct_fran_1stWon + cat2 + pct_fran_2ndWon + 
+modelo_l1 =glm(fran_win1 ~ pct_fran_1stWon + cat2 + pct_fran_2ndWon + 
     pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
 
-modelo_l2=glm(fran_win1 ~ opp_age + pct_fran_1stWon + ord2 + pct_fran_2ndWon + 
+modelo_l2=glm(fran_win1 ~ pct_fran_1stWon + ord2 + pct_fran_2ndWon + 
     pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
 
 anova(modelo_l2,modelo_l1, test="LRT")
@@ -495,10 +588,10 @@ cerundolo_modelo <- cerundolo_modelo %>%
   mutate(cat3= cut(pct_fran_2ndWon, breaks = c(0, 0.4, 0.47, 0.52, 0.59, Inf)),
          ord3= cut(pct_fran_2ndWon, breaks = c(0, 0.4, 0.47, 0.52, 0.59, Inf), labels = F) )
 
-modelo_l1 =glm(fran_win1 ~ opp_age + pct_fran_1stWon + pct_opp_1stWon + cat3 + 
+modelo_l1 =glm(fran_win1 ~ pct_fran_1stWon + pct_opp_1stWon + cat3 + 
     pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
 
-modelo_l2=glm(fran_win1 ~ opp_age + pct_fran_1stWon + pct_opp_1stWon + ord3 + 
+modelo_l2=glm(fran_win1 ~ pct_fran_1stWon + pct_opp_1stWon + ord3 + 
     pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
 
 anova(modelo_l2,modelo_l1, test="LRT")
@@ -509,9 +602,9 @@ cerundolo_modelo <- cerundolo_modelo %>%
   mutate(cat4= cut(pct_opp_2ndWon, breaks = c(0, 0.4, 0.45, 0.52, 0.59, Inf)),
          ord4= cut(pct_opp_2ndWon, breaks = c(0, 0.4, 0.45, 0.52, 0.59, Inf), labels = F) )
 
-modelo_l1 =glm(fran_win1 ~ opp_age + pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + cat4 + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
+modelo_l1 =glm(fran_win1 ~ pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + cat4 + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
 
-modelo_l2=glm(fran_win1 ~ opp_age + pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + 
+modelo_l2=glm(fran_win1 ~ pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + 
     ord4 + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
 
 anova(modelo_l2,modelo_l1, test="LRT")
@@ -522,10 +615,10 @@ cerundolo_modelo <- cerundolo_modelo %>%
   mutate(cat5= cut(pct_fran_bp_wins, breaks = c(0, 0.275, 0.375, 0.47, 0.64, Inf)),
          ord5= cut(pct_fran_bp_wins, breaks = c(0, 0.275, 0.375, 0.47, 0.64, Inf), labels = F) )
 
-modelo_l1 =glm(fran_win1 ~ opp_age + pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon +
+modelo_l1 =glm(fran_win1 ~ pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon +
     pct_opp_2ndWon + cat5 + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
 
-modelo_l2=glm(fran_win1 ~ opp_age + pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + 
+modelo_l2=glm(fran_win1 ~pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + 
     pct_opp_2ndWon + ord5 + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
 
 anova(modelo_l2,modelo_l1, test="LRT")
@@ -536,10 +629,10 @@ cerundolo_modelo <- cerundolo_modelo %>%
   mutate(cat6= cut(pct_opp_bp_wins, breaks = c(0, 0.275, 0.375, 0.5, 0.6, Inf)),
          ord6= cut(pct_opp_bp_wins, breaks = c(0, 0.275, 0.375, 0.5, 0.6, Inf), labels = F) )
 
-modelo_l1 =glm(fran_win1 ~ opp_age + pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon +
+modelo_l1 =glm(fran_win1 ~pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon +
     pct_opp_2ndWon + pct_fran_bp_wins + cat6, data=cerundolo_modelo, family=binomial(link="logit"))
 
-modelo_l2=glm(fran_win1 ~ opp_age + pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + 
+modelo_l2=glm(fran_win1 ~ pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + 
     pct_opp_2ndWon + pct_fran_bp_wins + ord6, data=cerundolo_modelo, family=binomial(link="logit"))
 
 anova(modelo_l2,modelo_l1, test="LRT")
@@ -551,8 +644,255 @@ anova(modelo_l2,modelo_l1, test="LRT")
 El modelo final resulta
 
 ```{r}
-modelo_final = glm(fran_win ~ pct_fran_1stWon + cat2 + pct_fran_2ndWon + 
+modelo_final = glm(fran_win1 ~ pct_fran_1stWon + cat2 + pct_fran_2ndWon + 
     pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
 
 summary(modelo_final)
 ```
+
+```{r}
+library(corrplot)
+cerundolo_modelo[c(8,9,10,11,12,13,18,19)] %>% cor(method="pearson") %>% round(digits=2) -> mat_cor
+mat_cor
+corrplot(mat_cor, type="upper", order="hclust", tl.col="black", tl.srt=45)
+
+library(car)
+vif(modelo_final)
+
+#No parece existir problemas con la multicolinealidad
+
+summary(modelo_final)
+```
+
+plantear el modelo estimado
+
+## Interpretación y Resultados
+
+### Razones de Odds
+
+#### Variables continuas
+
+```{r}
+hist(cerundolo_final1$pct_fran_1stWon)
+ro_1 = exp(36.196*(0.05))
+
+ro_2= exp(19.616*0.05)
+ro_2
+
+ro_3 = exp(-26.462*(-0.05))
+ro_3
+
+hist(cerundolo_final1$pct_fran_bp_wins)
+
+ro_4= exp(8.884*0.1)
+ro_4
+
+ro_5= exp(-7.402*(-0.1))
+ro_5
+
+```
+
+Graficamos las curvas estimadas para las distintas variables explicativas con las que contamos
+
+```{r}
+valores_var <- data.frame(pct_fran_1stWon = seq(0, 1, length.out = 100))
+
+# Puedes usar los valores medios o cualquier valor relevante
+valores_var$pct_fran_2ndWon <- mean(cerundolo_modelo$pct_fran_2ndWon, na.rm = TRUE)
+
+valores_var$pct_opp_2ndWon <- mean(cerundolo_modelo$pct_opp_2ndWon, na.rm = TRUE)
+valores_var$pct_fran_bp_wins <- mean(cerundolo_modelo$pct_fran_bp_wins, na.rm = TRUE)
+valores_var$pct_opp_bp_wins <- mean(cerundolo_modelo$pct_opp_bp_wins, na.rm = TRUE)
+
+valores_var$cat2 <- "(0.65,0.7]" 
+
+# Obtener predicciones y errores estándar con predict()
+predicciones <- predict(modelo_final, newdata = valores_var, type = "link", se.fit = TRUE)
+
+# Convertir las predicciones al espacio de probabilidades usando la función logística
+valores_var$pred_prob <- plogis(predicciones$fit)
+
+# Calcular el intervalo de confianza (95%)
+valores_var$conf_inf <- plogis(predicciones$fit - 1.96 * predicciones$se.fit)
+valores_var$conf_sup <- plogis(predicciones$fit + 1.96 * predicciones$se.fit)
+
+# Graficar la curva con el intervalo de confianza
+G1=ggplot(valores_var, aes(x = pct_fran_1stWon, y = pred_prob)) +
+  geom_line(color = "steelblue3", size = 1) +  # Curva de probabilidades
+  geom_ribbon(aes(ymin = conf_inf, ymax = conf_sup), alpha = 0.3, fill = "steelblue1") +  # Intervalo de confianza
+  labs(title = "Curva de Probabilidades Estimadas con Intervalo de Confianza",
+       x = "Variable Explicativa",
+       y = "Probabilidad Estimada") +
+  theme_minimal()
+
+#variable 2
+
+valores_var <- data.frame(pct_fran_2ndWon = seq(0, 1, length.out = 100))
+
+# Puedes usar los valores medios o cualquier valor relevante
+valores_var$pct_fran_1stWon <- mean(cerundolo_modelo$pct_fran_1stWon, na.rm = TRUE)
+
+valores_var$pct_opp_2ndWon <- mean(cerundolo_modelo$pct_opp_2ndWon, na.rm = TRUE)
+valores_var$pct_fran_bp_wins <- mean(cerundolo_modelo$pct_fran_bp_wins, na.rm = TRUE)
+valores_var$pct_opp_bp_wins <- mean(cerundolo_modelo$pct_opp_bp_wins, na.rm = TRUE)
+
+valores_var$cat2 <- "(0.65,0.7]" 
+
+# Obtener predicciones y errores estándar con predict()
+predicciones <- predict(modelo_final, newdata = valores_var, type = "link", se.fit = TRUE)
+
+# Convertir las predicciones al espacio de probabilidades usando la función logística
+valores_var$pred_prob <- plogis(predicciones$fit)
+
+# Calcular el intervalo de confianza (95%)
+valores_var$conf_inf <- plogis(predicciones$fit - 1.96 * predicciones$se.fit)
+valores_var$conf_sup <- plogis(predicciones$fit + 1.96 * predicciones$se.fit)
+
+# Graficar la curva con el intervalo de confianza
+G2 = ggplot(valores_var, aes(x = pct_fran_2ndWon, y = pred_prob)) +
+  geom_line(color = "steelblue3", size = 1) +  # Curva de probabilidades
+  geom_ribbon(aes(ymin = conf_inf, ymax = conf_sup), alpha = 0.3, fill = "steelblue1") +  # Intervalo de confianza
+  labs(title = "Curva de Probabilidades Estimadas con Intervalo de Confianza",
+       x = "Variable Explicativa",
+       y = "Probabilidad Estimada") +
+  theme_minimal()
+
+#variable 3
+
+valores_var <- data.frame(pct_opp_2ndWon = seq(0, 1, length.out = 100))
+
+# Puedes usar los valores medios o cualquier valor relevante
+valores_var$pct_fran_1stWon <- mean(cerundolo_modelo$pct_fran_1stWon, na.rm = TRUE)
+
+valores_var$pct_fran_2ndWon <- mean(cerundolo_modelo$pct_fran_2ndWon, na.rm = TRUE)
+valores_var$pct_fran_bp_wins <- mean(cerundolo_modelo$pct_fran_bp_wins, na.rm = TRUE)
+valores_var$pct_opp_bp_wins <- mean(cerundolo_modelo$pct_opp_bp_wins, na.rm = TRUE)
+
+valores_var$cat2 <- "(0.65,0.7]" 
+
+# Obtener predicciones y errores estándar con predict()
+predicciones <- predict(modelo_final, newdata = valores_var, type = "link", se.fit = TRUE)
+
+# Convertir las predicciones al espacio de probabilidades usando la función logística
+valores_var$pred_prob <- plogis(predicciones$fit)
+
+# Calcular el intervalo de confianza (95%)
+valores_var$conf_inf <- plogis(predicciones$fit - 1.96 * predicciones$se.fit)
+valores_var$conf_sup <- plogis(predicciones$fit + 1.96 * predicciones$se.fit)
+
+# Graficar la curva con el intervalo de confianza
+G3 = ggplot(valores_var, aes(x = pct_opp_2ndWon, y = pred_prob)) +
+  geom_line(color = "steelblue3", size = 1) +  # Curva de probabilidades
+  geom_ribbon(aes(ymin = conf_inf, ymax = conf_sup), alpha = 0.3, fill = "steelblue1") +  # Intervalo de confianza
+  labs(title = "Curva de Probabilidades Estimadas con Intervalo de Confianza",
+       x = "Variable Explicativa",
+       y = "Probabilidad Estimada") +
+  theme_minimal()
+
+#variable 4
+
+valores_var <- data.frame(pct_fran_bp_wins = seq(0, 1, length.out = 100))
+
+# Puedes usar los valores medios o cualquier valor relevante
+valores_var$pct_fran_1stWon <- mean(cerundolo_modelo$pct_fran_1stWon, na.rm = TRUE)
+
+valores_var$pct_fran_2ndWon <- mean(cerundolo_modelo$pct_fran_2ndWon, na.rm = TRUE)
+valores_var$pct_opp_2ndWon <- mean(cerundolo_modelo$pct_opp_2ndWon, na.rm = TRUE)
+valores_var$pct_opp_bp_wins <- mean(cerundolo_modelo$pct_opp_bp_wins, na.rm = TRUE)
+
+valores_var$cat2 <- "(0.65,0.7]" 
+
+# Obtener predicciones y errores estándar con predict()
+predicciones <- predict(modelo_final, newdata = valores_var, type = "link", se.fit = TRUE)
+
+# Convertir las predicciones al espacio de probabilidades usando la función logística
+valores_var$pred_prob <- plogis(predicciones$fit)
+
+# Calcular el intervalo de confianza (95%)
+valores_var$conf_inf <- plogis(predicciones$fit - 1.96 * predicciones$se.fit)
+valores_var$conf_sup <- plogis(predicciones$fit + 1.96 * predicciones$se.fit)
+
+# Graficar la curva con el intervalo de confianza
+G4 = ggplot(valores_var, aes(x = pct_fran_bp_wins, y = pred_prob)) +
+  geom_line(color = "steelblue3", size = 1) +  # Curva de probabilidades
+  geom_ribbon(aes(ymin = conf_inf, ymax = conf_sup), alpha = 0.3, fill = "steelblue1") +  # Intervalo de confianza
+  labs(title = "Curva de Probabilidades Estimadas con Intervalo de Confianza",
+       x = "Variable Explicativa",
+       y = "Probabilidad Estimada") +
+  theme_minimal()
+
+#variable 5
+
+valores_var <- data.frame(pct_opp_bp_wins = seq(0, 1, length.out = 100))
+
+# Puedes usar los valores medios o cualquier valor relevante
+valores_var$pct_fran_1stWon <- mean(cerundolo_modelo$pct_fran_1stWon, na.rm = TRUE)
+
+valores_var$pct_fran_2ndWon <- mean(cerundolo_modelo$pct_fran_2ndWon, na.rm = TRUE)
+valores_var$pct_opp_2ndWon <- mean(cerundolo_modelo$pct_opp_2ndWon, na.rm = TRUE)
+valores_var$pct_fran_bp_wins <- mean(cerundolo_modelo$pct_fran_bp_wins, na.rm = TRUE)
+
+valores_var$cat2 <- "(0.65,0.7]" 
+
+# Obtener predicciones y errores estándar con predict()
+predicciones <- predict(modelo_final, newdata = valores_var, type = "link", se.fit = TRUE)
+
+# Convertir las predicciones al espacio de probabilidades usando la función logística
+valores_var$pred_prob <- plogis(predicciones$fit)
+
+# Calcular el intervalo de confianza (95%)
+valores_var$conf_inf <- plogis(predicciones$fit - 1.96 * predicciones$se.fit)
+valores_var$conf_sup <- plogis(predicciones$fit + 1.96 * predicciones$se.fit)
+
+# Graficar la curva con el intervalo de confianza
+G5 = ggplot(valores_var, aes(x = pct_opp_bp_wins, y = pred_prob)) +
+  geom_line(color = "steelblue3", size = 1) +  # Curva de probabilidades
+  geom_ribbon(aes(ymin = conf_inf, ymax = conf_sup), alpha = 0.3, fill = "steelblue1") +  # Intervalo de confianza
+  labs(title = "Curva de Probabilidades Estimadas con Intervalo de Confianza",
+       x = "Variable Explicativa",
+       y = "Probabilidad Estimada") +
+  theme_minimal()
+
+grid.arrange(G1, G2, G3, G4, G5, ncol = 2)
+```
+
+Observamos que la tasa de cambio en la probabilidad de victoria de Fran será mas alta para la variable "Porcentaje de puntos realizados con el primer servicio".
+
+#### Variable incorporada con Dummies
+
+```{r}
+
+ro_40 = exp(12.432)
+ro_41 = exp(-3.867-(-12.432))
+ro_42 = exp(-5.629814-(-12.432))
+ro_43 = exp(-5.208581-(-12.432))
+
+eta_d0= exp(-16.232947+ 36.196*(mean(cerundolo_modelo$pct_fran_1stWon)) +19.615*(mean(cerundolo_modelo$pct_fran_2ndWon)) - 26.492*(mean(cerundolo_modelo$pct_opp_2ndWon)) + 8.883*(mean(cerundolo_modelo$pct_fran_bp_wins)) - 7.401*(mean(cerundolo_modelo$pct_opp_bp_wins)))
+
+prob_d0 = eta_d0/(1+eta_d0)
+prob_d0
+
+eta_d1= exp(-16.232947+ 36.196*(mean(cerundolo_modelo$pct_fran_1stWon))- 3.867 +19.615*(mean(cerundolo_modelo$pct_fran_2ndWon)) - 26.492*(mean(cerundolo_modelo$pct_opp_2ndWon)) + 8.883*(mean(cerundolo_modelo$pct_fran_bp_wins)) - 7.401*(mean(cerundolo_modelo$pct_opp_bp_wins)))
+
+prob_d1 = eta_d1/(1+eta_d1)
+prob_d1
+
+eta_d2= exp(-16.232947+ 36.196*(mean(cerundolo_modelo$pct_fran_1stWon))-5.629 +19.615*(mean(cerundolo_modelo$pct_fran_2ndWon)) - 26.492*(mean(cerundolo_modelo$pct_opp_2ndWon)) + 8.883*(mean(cerundolo_modelo$pct_fran_bp_wins)) - 7.401*(mean(cerundolo_modelo$pct_opp_bp_wins)))
+
+prob_d2 = eta_d2/(1+eta_d2)
+prob_d2
+
+eta_d3= exp(-16.232947+ 36.196*(mean(cerundolo_modelo$pct_fran_1stWon))-5.208 +19.615*(mean(cerundolo_modelo$pct_fran_2ndWon)) - 26.492*(mean(cerundolo_modelo$pct_opp_2ndWon)) + 8.883*(mean(cerundolo_modelo$pct_fran_bp_wins)) - 7.401*(mean(cerundolo_modelo$pct_opp_bp_wins)))
+
+prob_d3 = eta_d3/(1+eta_d3)
+prob_d3
+
+eta_d4= exp(-16.232947+ 36.196*(mean(cerundolo_modelo$pct_fran_1stWon))-12.432 +19.615*(mean(cerundolo_modelo$pct_fran_2ndWon)) - 26.492*(mean(cerundolo_modelo$pct_opp_2ndWon)) + 8.883*(mean(cerundolo_modelo$pct_fran_bp_wins)) - 7.401*(mean(cerundolo_modelo$pct_opp_bp_wins)))
+
+prob_d4 = eta_d4/(1+eta_d4)
+prob_d4
+
+
+```
+
+## Conclusiones
