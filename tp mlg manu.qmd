@@ -82,6 +82,11 @@ library(plotly)
 library(glmtoolbox)
 library(statmod)
 library(gridExtra)
+library(knitr)
+library(car)
+library(janitor)
+library(caret)
+library(pROC)
 
 cerundolo_final1 <- read_excel("C:/Users/Usuario/Desktop/Estadistica/Analisis-Francisco-Cerundolo/cerundolo_final1.xlsx")
 
@@ -168,7 +173,7 @@ cerundolo_final1$opp_hand[cerundolo_final1$winner_name == "Ryan Peniston"] <- "L
 
 ```
 
-### Proporcion de victorias
+### Proporción de victorias
 
 ```{r, echo=FALSE, warning=FALSE, fig.align='center'}
 
@@ -214,7 +219,7 @@ ggplotly(g)
 
 ```
 
-Se puede apreciar que la mayor cantidad de partidos los jugó en polvo de ladrillo, algo común en jugadores argentinos, y muy pocos partidos en cesped, ya que es la superficie con menos torneos en el circuito. 
+Se puede apreciar que la mayor cantidad de partidos los jugó en polvo de ladrillo, algo común en jugadores argentinos, y muy pocos partidos en cesped, ya que es la superficie con menos torneos en el circuito.
 
 ```{r, echo=FALSE, warning=FALSE}
 tabla_s=table(cerundolo_final1$surface, cerundolo_final1$fran_win)
@@ -260,6 +265,7 @@ g1=mosaic(
        #main = "Resultados según la mano habil del rival")
 
 ```
+
 Se sabe que la mayor cantidad de jugadores en el circuito son derechos, por lo que se observa que la mayor cantidad de rivales de Fran son derechos, mientras que vemos que la proporción de victorias y derrotas es similar tanto para jugadores diestros como para los zurdos. Lo cual da indicio de que esta variable no parecería influir en la respuesta.
 
 ### Distribución de la edad y la altura del rival según el resultado
@@ -292,7 +298,7 @@ ggplot(cerundolo_final1) +
 
 ```
 
-Tanto la edad como la altura del rival no parecen ser muy influyentes a la hora de evidenciar la posibilidad de un resultado. 
+Tanto la edad como la altura del rival no parecen ser muy influyentes a la hora de evidenciar la posibilidad de un resultado.
 
 ### Distribución de la duracion de los partidos según el resultado
 
@@ -304,6 +310,7 @@ ggplot(cerundolo_final1) +
   theme(legend.position = "none")+
   scale_fill_manual(values = c("Perdió"="steelblue1","Ganó"="steelblue4"))
 ```
+
 Al observar las distribuciones en la duración de los partidos que ganó y que perdió, parecen no diferir demasiado, por lo que podria no ser un factor influyente en la probabilidad de ganar un partido.
 
 ### Distribución del ranking del rival según el resultado
@@ -345,6 +352,7 @@ ggplot(cerundolo_final1) +
 
 
 ```
+
 La mayoría de sus partidos y victorias fueron en los torneos de menor nivel del circuito (ATP 250 y ATP 500). Al tener proporciones de victorias parecidas en todos los niveles de torneos, parece no influir en la variable respuesta.
 
 ### Radar chart para estadísticas del juego según el resultado
@@ -411,6 +419,7 @@ title(main = "Estadistícas de juego de Cerúndolo")
 
 
 ```
+
 Se observa que las estadística de juego de Fran van a presentar en general mejores porcentajes en los partidos en los cuales el gana, viendo que el porcentaje de primeros servicios en juego y de dobles faltas son las estadisticas que menor diferencia presentan en relación a sí gana o pierde el partido.
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
@@ -465,14 +474,14 @@ title(main = "Estadísticas de juego del rival")
 
 
 ```
-De manera concordante con lo visto en el grafico anterior, se ve que las estadísticas de juego del rival serán en general mayores cuando Fran pierda el partido, quedando en evidencia una gran diferencia en los puntos de primer servicio ganados.
 
+De manera concordante con lo visto en el grafico anterior, se ve que las estadísticas de juego del rival serán en general mayores cuando Fran pierda el partido, quedando en evidencia una gran diferencia en los puntos de primer servicio ganados.
 
 ## Modelo Estadístico
 
-#### Selección de variables
+### Selección de variables
 
-Para decidir que variables resultan significativas en la respuesta, se realiza una selección de variables "paso a paso", con todas las variables definidas anteriormente. Para este procedimiento se utilizará la variable `dif_rank` en vez de la variable `opp_rank`, ya que parece más adecuado trabajar con la diferencia de ranking al momento del partido debido a que el ranking de Fran varía mucho desde su debut hasta el día de hoy. 
+Para modelar la probabilidad de que Fran gane el partido, se aplicará un modelo lineal general con enlace $logit$ y para decidir que variables resultan significativas en la respuesta, se realiza una selección de variables "paso a paso", con todas las variables definidas anteriormente. Para este procedimiento se utilizará la variable `dif_rank` en vez de la variable `opp_rank`, ya que parece más adecuado trabajar con la diferencia de ranking al momento del partido debido a que el ranking de Fran varía mucho desde su debut hasta el día de hoy.
 
 El método automático utilizado para esta selección de variables, se basa en la diferencia de AIC entre los modelos para decidir cual es modelo óptimo a utilizar.
 
@@ -481,7 +490,6 @@ cerundolo_modelo= subset(cerundolo_final1, select= c(surface,tourney_level,minut
 
 cerundolo_modelo = na.omit(cerundolo_modelo)
 ```
-
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide',}
 # Modelo completo
@@ -509,11 +517,9 @@ hltest(modelo_final)
 
 ```
 
-$modelo$
+$logit(\pi_i)=ln(\frac{\pi_i}{1-\pi_i})= \beta_{0}+\beta_{1}*OppAge_i+\beta_{2}*Fran1stWon_i+\beta_{3}*Opp1stWon_i+\beta_{4}*Fran2ndWon_i+$ $+\beta_{5}*Opp2ndWon_i+\beta_{6}*FranBpWin+\beta_{7}*OppBpWin$
 
 Se realizó el test de Hosmer-Lemeshow para probar la bondad de ajuste del modelo, y se ubtuvo un $p-value=0.83$, por lo que se puede concluir que el modelo ajusta.
-
-Finalmente, se generaron dudas con respecto a la significancia de la variable `opp_age` en el modelo, debido a que en la parte descriptiva parecía no influir significativamente en la respuesta y presenta un $p-value=0.11$ en el test de Wald. Para probar si esta variable es realmente significtiva, se realiza un test de razónde verosimilitud comparandoel modelo propuesto con uno que no tenga la variable `opp_age`.
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
 modelo_cuasi_final = glm(fran_win1 ~ pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo,family = binomial(link="logit"))
@@ -525,61 +531,14 @@ anova(modelo_cuasi_final, modelo_final, test="LRT")
 modelo_final = glm(fran_win1 ~ pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo,family = binomial(link="logit"))
 ```
 
+Finalmente, se generaron dudas con respecto a la significancia de la variable `opp_age` en el modelo, debido a que en la parte descriptiva parecía no influir significativamente en la respuesta y presenta un $p-value=0.11$ en el test de Wald. Para probar si esta variable es realmente significtiva, se realiza un test de razón de verosimilitud comparando el modelo propuesto con uno que no tenga la variable `opp_age`, el cual arroja un $p-value=0.10$, por lo que no se rechaza la hipótesis de que el efecto de esta variable es nulo. Por lo tanto se decide quitar esta variable del modelo:
 
+$logit(\pi_i)=ln(\frac{\pi_i}{1-\pi_i})= \beta_{0}+\beta_{1}*Fran1stWon_i+\beta_{2}*Opp1stWon_i+\beta_{3}*Fran2ndWon_i+\beta_{4}*Opp2ndWon_i+$ 
+$+\beta_{5}*FranBpWin+\beta_{6}*OppBpWin$
 
-## Adecuación de la función de enlace
+### Evaluación de Linealidad
 
-### Test de hipótesis
-
-```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
-
-pred.logit<-predict(modelo_final)
-cerundolo_modelo$pred.2.logit<-pred.logit*pred.logit
-
-modelo_logit.2 <- glm(fran_win1 ~ pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins+ pred.2.logit, data=cerundolo_modelo, family=binomial(link="logit"))
-
-anova(modelo_final, modelo_logit.2, test="LRT")
-
-
-```
-
-Parece ser adecuada la funcion de enlace
-
-## Análisis de residuos
-
-### Evaluación de la componente sistemática
-
-```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.width = 4*1.33*2}
-# Residuos cuantil
-rQ.final <- qresid(modelo_final)
-
-### Gráfico de residuos cuantil vs. probabilidades estimadas (ajuste logit)
-G1 <- ggplot(cerundolo_modelo, aes(y = rQ.final, x = fitted(modelo_final))) + 
-  geom_point(fill = "orange", shape = 21, size = 3) +
-  geom_hline(yintercept = 0) + ylim(-3, 3) + 
-  geom_hline(yintercept = -3, linetype = "dashed") + 
-  geom_hline(yintercept =  3, linetype = "dashed") +
-  labs(title = "Gráfico de residuos cuantil vs. las probabilidades estimadas", x = expression(hat(pi)), y = "Residuos cuantil") +
-  theme_minimal()
-G1
-```
-
-### Evaluación de la componente aleatoria
-
-Mediante un gráfico QQ puede evaluarse si la distribución supuesta es adecuada. la distribucion de la variable latente?
-
-```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.width = 4*1.33*2}
-# Gráfico QQ
-G2 <- ggplot(cerundolo_modelo, aes(sample = rQ.final)) +
-  stat_qq(distribution = qnorm, fill = "orange", shape = 21, size = 3) +
-  stat_qq_line() +
-  labs(title = "Gráfico probabilístico normal con residuos cuantil",  x = "Cuantiles teóricos", y = "Cuantiles de los residuos cuantil") +
-  theme_minimal()
-
-G2
-```
-
-## Evaluación de Linealidad
+El modelo presentado incorpora las seis variables expicativas de forma lineal, entonces se debe evaluar si esto es adecuado. Se realizan los test correspondientes y se observa que la única variable que no presenta un comportamiento lineal es `pct_opp_1stWon`, por lo que el modelo final incorpora esta variable a través de Dummies. El modelo final resulta:
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
 
@@ -669,7 +628,8 @@ anova(modelo_l2,modelo_l1, test="LRT")
 
 ```
 
-El modelo final resulta
+$logit(\pi_i)=ln(\frac{\pi_i}{1-\pi_i})= \beta_{0}+\beta_{1}*Fran1stWon_i+\beta_{2}*D_{(0.6,0.65)i}+\beta_{3}*D_{(0.65,0.7)i}+$
+$+\beta_{4}*D_{(0.7,0.75)i}+\beta_{5}*D_{(0.75,Inf)i}+\beta_{6}*Fran2ndWon_i+\beta_{7}*Opp2ndWon_i+\beta_{8}*FranBpWin+\beta_{9}*OppBpWin$
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
 modelo_final = glm(fran_win1 ~ pct_fran_1stWon + cat2 + pct_fran_2ndWon + 
@@ -678,27 +638,83 @@ modelo_final = glm(fran_win1 ~ pct_fran_1stWon + cat2 + pct_fran_2ndWon +
 summary(modelo_final)
 ```
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-library(corrplot)
-cerundolo_modelo[c(8,9,10,11,12,13,18,19)] %>% cor(method="pearson") %>% round(digits=2) -> mat_cor
-mat_cor
-corrplot(mat_cor, type="upper", order="hclust", tl.col="black", tl.srt=45)
+Y el modelo estimado:
 
-library(car)
-vif(modelo_final)
+$logit(\hat{\pi_i})=ln(\frac{\hat{\pi_i}}{1-\hat\pi_i})= -16.23+36.19*Fran1stWon_i-3.86*D_{(0.6,0.65)i}-5.63*D_{(0.65,0.7)i}-5.20*D_{(0.7,0.75)i}-$
+$-12.43*D_{(0.75,Inf)i}+19.61*Fran2ndWon_i-26.49*Opp2ndWon_i+8.88*FranBpWin-7.40*OppBpWin$
 
-#No parece existir problemas con la multicolinealidad
+### Adecuación de la función de enlace
 
-summary(modelo_final)
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+
+pred.logit<-predict(modelo_final)
+cerundolo_modelo$pred.2.logit<-pred.logit*pred.logit
+
+modelo_logit.2 <- glm(fran_win1 ~ pct_fran_1stWon + cat2 + pct_fran_2ndWon + pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins+ pred.2.logit, data=cerundolo_modelo, family=binomial(link="logit"))
+
+anova(modelo_final, modelo_logit.2, test="LRT")
+
+
 ```
 
-plantear el modelo estimado
+Para probar que el enlace $logit$ elegido es adecuado, se realiza un test de razón de verosimilitud, comparando el modelo actual con el mismo modelo más el predictor lineal al cuadrado. Este test arroja un $p-value=0.82$, por lo que no se rechaza la hipótesis de que el predictor lineal al cuadrado no aporta significativamente, y el modelo planteado en principio con el enlace $logit$ es adecuado.
+
+### Análisis de residuos y multicolinealidad
+
+Para comprobar el cumplimiento de los residuos, se trabajan con residuos cuantiles ya que la variable respuesta es binaria.
+
+#### Gráfico de residuos cuantil vs. las probabilidades estimadas
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.width = 4*1.33*2}
+# Residuos cuantil
+rQ.final <- qresid(modelo_final)
+
+### Gráfico de residuos cuantil vs. probabilidades estimadas (ajuste logit)
+G1 <- ggplot(cerundolo_modelo, aes(y = rQ.final, x = fitted(modelo_final))) + 
+  geom_point(fill = "steelblue3", shape = 21, size = 3) +
+  geom_hline(yintercept = 0) + ylim(-3, 3) + 
+  geom_hline(yintercept = -3, linetype = "dashed") + 
+  geom_hline(yintercept =  3, linetype = "dashed") +
+  labs(x = expression(hat(pi)), y = "Residuos cuantil") +
+  theme_minimal()
+G1
+```
+
+No se observa una clara tendencia en el gráfico, por lo que se concluye que la parte sistemática del modelo es adeucuada.
+
+#### Gráfico probabilístico normal con residuos cuantil
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.width = 4*1.33*2}
+# Gráfico QQ
+G2 <- ggplot(cerundolo_modelo, aes(sample = rQ.final)) +
+  stat_qq(distribution = qnorm, fill = "steelblue3", shape = 21, size = 3) +
+  stat_qq_line() +
+  labs(x = "Cuantiles teóricos", y = "Cuantiles de los residuos cuantil") +
+  theme_minimal()
+
+G2
+```
+
+Se aprecia que los datos se ajustan a la recta, por lo tanto el modelo parece ser adecuado.
+
+#### Multicolinealidad
+
+Al contar con cinco variables explicativas continuas, sería nevesario evaluar la presencia de multicolinealidad de dichas variables, la cual podría estar influenciando los resultados del modelo. Para esto se calcula la matriz de correlación de dichas variables y el factor de inflación de la variancia (VIF).
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(corrplot)
+cerundolo_modelo[c(10,12,13,18,19)] %>% cor(method="pearson") %>% round(digits=2) -> mat_cor
+
+corrplot(mat_cor, type="upper", order="hclust", tl.col="black", tl.srt=45)
+
+```
+
+Al ver el gráfico de las correlaciones se observa que no hay correlaciones altas entre las variablas explicativas, y al calcular los VIF todos dan menores a 2, con lo cual se concluye que no hay presencia de multicolinealidad.
+
 
 ## Interpretación y Resultados
 
-### Razones de Odds
-
-#### Variables continuas
+### Variables continuas
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
 
@@ -721,22 +737,34 @@ ro_5
 
 `pct_fran_1stWon`: $\hat{RH}_{x+0.05vsx} = e^{\hat{\beta_{1}}*0.05} = e^{36.196*0.05} = 6.10$
 
+Ante un aumento del 5% en el porcentaje de puntos ganados con el primer servicio, la chance de que Francisco Cerúndolo gane el partido aumenta un 510%, para valores fijos de las demás variables.
+
 `pct_fran_2ndWon`: $\hat{RH}_{x+0.05vsx} = e^{\hat{\beta_{6}}*0.05} = e^{19.616*0.05} = 2.66$
+
+Ante un aumento del 5% en el porcentaje de puntos ganados con el segundo servicio, la chance de que Francisco Cerúndolo gane el partido aumenta un 166%, para valores fijos de las demás variables.
 
 `pct_opp_2ndWon`: $\hat{RH}_{x-0.05vsx} = e^{\hat{\beta_{7}}*(-0.05)} = e^{(-26.462)*(-0.05)} = 3.75$
 
+Ante una disminución del 5% en el porcentaje de puntos ganados del rival con el segundo servicio, la chance de que Francisco Cerúndolo gane el partido aumenta un 275%, para valores fijos de las demás variables.
+
 `pct_fran_bp_wins`: $\hat{RH}_{x+0.1vsx} = e^{\hat{\beta_{8}}*0.1} = e^{8.884*0.1} = 2.43$
+
+Ante un aumento del 10% en el porcentaje de break points ganados, la chance de que Francisco Cerúndolo gane el partido aumenta un 143%, para valores fijos de las demás variables.
 
 `pct_opp_bp_wins`: $\hat{RH}_{x-0.1vsx} = e^{\hat{\beta_{9}}*(-0.1)} = e^{(-7.402)*(-0.1)} = 2.09$
 
-Graficamos las curvas estimadas para las distintas variables explicativas con las que contamos
+Ante una disminución del 10% en el porcentaje de break points ganados del rival, la chance de que Francisco Cerúndolo gane el partido aumenta un 109%, para valores fijos de las demás variables.
+
+#### Curvas de probabilidad estimada
+
+Para cada una de las cinco variables continuas se calcúla la curva de probabilidad estimada, con sus respectivos intervalos de confianza. Hay que tener en cuenta que las restantes variables son fijadas en su media.
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
+#variable 1
+
 valores_var <- data.frame(pct_fran_1stWon = seq(0, 1, length.out = 100))
 
-# Puedes usar los valores medios o cualquier valor relevante
 valores_var$pct_fran_2ndWon <- mean(cerundolo_modelo$pct_fran_2ndWon, na.rm = TRUE)
-
 valores_var$pct_opp_2ndWon <- mean(cerundolo_modelo$pct_opp_2ndWon, na.rm = TRUE)
 valores_var$pct_fran_bp_wins <- mean(cerundolo_modelo$pct_fran_bp_wins, na.rm = TRUE)
 valores_var$pct_opp_bp_wins <- mean(cerundolo_modelo$pct_opp_bp_wins, na.rm = TRUE)
@@ -757,8 +785,8 @@ valores_var$conf_sup <- plogis(predicciones$fit + 1.96 * predicciones$se.fit)
 G1=ggplot(valores_var, aes(x = pct_fran_1stWon, y = pred_prob)) +
   geom_line(color = "steelblue3", size = 1) +  # Curva de probabilidades
   geom_ribbon(aes(ymin = conf_inf, ymax = conf_sup), alpha = 0.3, fill = "steelblue1") +  # Intervalo de confianza
-  labs(title = "Curva de Probabilidades Estimadas con Intervalo de Confianza",
-       x = "Variable Explicativa",
+  labs(title = "",
+       x = "pct_fran_1stWon",
        y = "Probabilidad Estimada") +
   theme_minimal()
 
@@ -766,9 +794,7 @@ G1=ggplot(valores_var, aes(x = pct_fran_1stWon, y = pred_prob)) +
 
 valores_var <- data.frame(pct_fran_2ndWon = seq(0, 1, length.out = 100))
 
-# Puedes usar los valores medios o cualquier valor relevante
 valores_var$pct_fran_1stWon <- mean(cerundolo_modelo$pct_fran_1stWon, na.rm = TRUE)
-
 valores_var$pct_opp_2ndWon <- mean(cerundolo_modelo$pct_opp_2ndWon, na.rm = TRUE)
 valores_var$pct_fran_bp_wins <- mean(cerundolo_modelo$pct_fran_bp_wins, na.rm = TRUE)
 valores_var$pct_opp_bp_wins <- mean(cerundolo_modelo$pct_opp_bp_wins, na.rm = TRUE)
@@ -789,8 +815,8 @@ valores_var$conf_sup <- plogis(predicciones$fit + 1.96 * predicciones$se.fit)
 G2 = ggplot(valores_var, aes(x = pct_fran_2ndWon, y = pred_prob)) +
   geom_line(color = "steelblue3", size = 1) +  # Curva de probabilidades
   geom_ribbon(aes(ymin = conf_inf, ymax = conf_sup), alpha = 0.3, fill = "steelblue1") +  # Intervalo de confianza
-  labs(title = "Curva de Probabilidades Estimadas con Intervalo de Confianza",
-       x = "Variable Explicativa",
+  labs(title = "",
+       x = "pct_fran_2ndWon",
        y = "Probabilidad Estimada") +
   theme_minimal()
 
@@ -800,7 +826,6 @@ valores_var <- data.frame(pct_opp_2ndWon = seq(0, 1, length.out = 100))
 
 # Puedes usar los valores medios o cualquier valor relevante
 valores_var$pct_fran_1stWon <- mean(cerundolo_modelo$pct_fran_1stWon, na.rm = TRUE)
-
 valores_var$pct_fran_2ndWon <- mean(cerundolo_modelo$pct_fran_2ndWon, na.rm = TRUE)
 valores_var$pct_fran_bp_wins <- mean(cerundolo_modelo$pct_fran_bp_wins, na.rm = TRUE)
 valores_var$pct_opp_bp_wins <- mean(cerundolo_modelo$pct_opp_bp_wins, na.rm = TRUE)
@@ -821,8 +846,8 @@ valores_var$conf_sup <- plogis(predicciones$fit + 1.96 * predicciones$se.fit)
 G3 = ggplot(valores_var, aes(x = pct_opp_2ndWon, y = pred_prob)) +
   geom_line(color = "steelblue3", size = 1) +  # Curva de probabilidades
   geom_ribbon(aes(ymin = conf_inf, ymax = conf_sup), alpha = 0.3, fill = "steelblue1") +  # Intervalo de confianza
-  labs(title = "Curva de Probabilidades Estimadas con Intervalo de Confianza",
-       x = "Variable Explicativa",
+  labs(title = "",
+       x = "pct_opp_2ndWon",
        y = "Probabilidad Estimada") +
   theme_minimal()
 
@@ -832,7 +857,6 @@ valores_var <- data.frame(pct_fran_bp_wins = seq(0, 1, length.out = 100))
 
 # Puedes usar los valores medios o cualquier valor relevante
 valores_var$pct_fran_1stWon <- mean(cerundolo_modelo$pct_fran_1stWon, na.rm = TRUE)
-
 valores_var$pct_fran_2ndWon <- mean(cerundolo_modelo$pct_fran_2ndWon, na.rm = TRUE)
 valores_var$pct_opp_2ndWon <- mean(cerundolo_modelo$pct_opp_2ndWon, na.rm = TRUE)
 valores_var$pct_opp_bp_wins <- mean(cerundolo_modelo$pct_opp_bp_wins, na.rm = TRUE)
@@ -853,8 +877,8 @@ valores_var$conf_sup <- plogis(predicciones$fit + 1.96 * predicciones$se.fit)
 G4 = ggplot(valores_var, aes(x = pct_fran_bp_wins, y = pred_prob)) +
   geom_line(color = "steelblue3", size = 1) +  # Curva de probabilidades
   geom_ribbon(aes(ymin = conf_inf, ymax = conf_sup), alpha = 0.3, fill = "steelblue1") +  # Intervalo de confianza
-  labs(title = "Curva de Probabilidades Estimadas con Intervalo de Confianza",
-       x = "Variable Explicativa",
+  labs(title = "",
+       x = "pct_fran_bp_wins",
        y = "Probabilidad Estimada") +
   theme_minimal()
 
@@ -885,17 +909,19 @@ valores_var$conf_sup <- plogis(predicciones$fit + 1.96 * predicciones$se.fit)
 G5 = ggplot(valores_var, aes(x = pct_opp_bp_wins, y = pred_prob)) +
   geom_line(color = "steelblue3", size = 1) +  # Curva de probabilidades
   geom_ribbon(aes(ymin = conf_inf, ymax = conf_sup), alpha = 0.3, fill = "steelblue1") +  # Intervalo de confianza
-  labs(title = "Curva de Probabilidades Estimadas con Intervalo de Confianza",
-       x = "Variable Explicativa",
+  labs(title = "",
+       x = "pct_opp_bp_wins",
        y = "Probabilidad Estimada") +
   theme_minimal()
 
 grid.arrange(G1, G2, G3, G4, G5, ncol = 2)
 ```
 
-Observamos que la tasa de cambio en la probabilidad de victoria de Fran será mas alta para la variable "Porcentaje de puntos realizados con el primer servicio".
+Observamos que la tasa de cambio máxima en la probabilidad de victoria de Fran será mas alta para la variable `pct_fran_1stWon`.
 
-#### Variable incorporada con Dummies
+### Variable categórica
+
+Se calculan las probabilidades estimadas para cada una de las categorías de la variable `pct_opp_1stWon`, dejando las demás variables fijas en su media.
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
 
@@ -932,9 +958,21 @@ prob_d4
 
 ```
 
+$\hat{\pi}_{(0,0.6)} = 0.9959$
+
+$\hat{\pi}_{(0.6,0.65)} = 0.8356$
+
+$\hat{\pi}_{(0.65,0.7)} = 0.4660$
+
+$\hat{\pi}_{(0.7,0.75)} = 0.5707$
+
+$\hat{\pi}_{(0.75,Inf)} = 0.0009$
+
+Se puede concluir que si Francisco logra dejar a su rival en menos del 65% de puntos ganados con el primer servicio, las probabilidades de ganar el partido son mul altas. Mientras que si el porcentaje de puntos ganados con el primer servicio del rival ronda entra el 65% y 75%, se puede pensar que cualquiera de los dos jugadores puede quedarse con el partido. Por último si el rival de Fran gana mas del 75% de los puntos con el primer servicio, la probabilidad de ganar el partido para el argentino seran muy bajas.
+
 ## Predicciones
 
-Para trabajar con las predicciones, se trabaja con una base de datos de los 24 partidos de Fran, luego del último partido cargado en la base principal
+Para poder evaluar la capacidad predictiva del modelo, se trabaja con una base de datos de los 24 partidos de Fran, luego del último partido cargado en la base principal. Se presenta la tabla con las predicciones versus el resultado real:
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 cerundolo_prediccion <- read_excel("C:/Users/Usuario/Desktop/Estadistica/Analisis-Francisco-Cerundolo/cerundolo_prediccion.xlsx")
@@ -957,15 +995,23 @@ dimnames(tabla) <- list(
   "Observaciones" = c("Perdió", "Ganó")
 )
 
-library(knitr)
-
 tabla3 = tabla %>%
   kable("html", caption = "Tabla 3: Predichos vs. Observados") %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),position = "center",full_width = F) %>% row_spec(0, bold = T, background = "steelblue1", color = "black") %>%
-  column_spec(1, bold = TRUE)
+  column_spec(1, bold = TRUE, background="steelblue1")
 
 tabla3
 
 ```
 
+En la Tabla 3, se puede observar que el modelo predijo que Fran iba a perder de manera acertada 9 de 11 veces (especifidad del 81.8%) y predijo que fran iba a ganar de manera acertada 12 de 13 veces (sensibilidad del 92.3%). A pesar de probarlo con pocos datos, el modelo parece tener una buena capacidad predictiva (accuracy del 87.5%).
+
 ## Conclusiones
+
+Luego de finalizar este extenso y minusioso análisis sobre las características y condiciones que pueden afectar el desempeño de Fran, se obtuvieron las siguientes conclusiones:
+
+-   Muchas de las variables medidas en este estudio no resultaron influyentes a la hora de evaluar la probabilidad de victoria en un partido del jugador, lo cual da un indicio de (algo ya sabido por los especialistas del deporte) que Francisco es un jugador particular, que no se ve influenciado por condiciones como la duración de los partidos, el nivel del rival, la superficie, la presión por jugar un partido en una instancia decisiva, entre otras cosas, sino más bien en como se siente él dentro de la cancha ese día.
+
+-   Como la probabilidad de ganar aumenta en gran magnitud ante pequeños aumentos del porcentaje de puntos ganados con el primer servicio, se recomendaría al entrenador de Fran centrarse en este aspecto a la hora de planificar sus entrenamientos.
+
+-   Algo a tener en cuenta, es que a la hora de realizar predicciones, el modelo utiliza variables que son medidas una vez que termina el partido, por lo que no sería posible realizar estas predicciones para partidos futuros. Lo que se propone es utilizar los promedios históricos de los rivales y de Cerúndolo en estas variables y de esta manera realizar dichas predicciones.
