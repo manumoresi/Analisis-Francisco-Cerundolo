@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Trabajo Práctico Modélos Lineales Generalizados: Análsis de Francisco Cerúndolo</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="tp mlg manu_files/libs/clipboard/clipboard.min.js"></script>
+<script src="tp mlg manu_files/libs/quarto-html/quarto.js"></script>
+<script src="tp mlg manu_files/libs/quarto-html/popper.min.js"></script>
+<script src="tp mlg manu_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="tp mlg manu_files/libs/quarto-html/anchor.min.js"></script>
+<link href="tp mlg manu_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="tp mlg manu_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="tp mlg manu_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="tp mlg manu_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="tp mlg manu_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="tp mlg manu_files/libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+
+<script src="tp mlg manu_files/libs/plotly-binding-4.10.4/plotly.js"></script>
+
+<script src="tp mlg manu_files/libs/typedarray-0.1/typedarray.min.js"></script>
+
+<script src="tp mlg manu_files/libs/jquery-3.5.1/jquery.min.js"></script>
+
+<link href="tp mlg manu_files/libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+
+<script src="tp mlg manu_files/libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+
+<link href="tp mlg manu_files/libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+
+<script src="tp mlg manu_files/libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+<script src="tp mlg manu_files/libs/kePrint-0.0.1/kePrint.js"></script>
+
+<link href="tp mlg manu_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Trabajo Práctico Modélos Lineales Generalizados: Análsis de Francisco Cerúndolo</h1>
+<p class="subtitle lead">Simón Gazze - Manuel Moresi</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introducción" class="level2">
+<h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
+<p>El tenis es uno de los deportes más populares del mundo, jugado por millones de personas a lo largo de todo el planeta, y se caracteriza por la destreza técnica, el esfuerzo físico y el análisis estratégico que requiere.</p>
+<p>A nivel profesional, el circuito mas prestigioso es el de la ATP (Association of Tennis Professionals), en donde estan los jugadores mas prestigiosos del planeta, compitiendo en diferentes torneos de diferentes categorías y superficies (polvo de ladrillo, cesped y canchas duras). En este circuito existe un ranking de jugadores, el cual los ubica segun sus resultados en el año, y se actualiza cada semana, siendo la posicion nº 1 el mejor tenista de la actualidad.</p>
+<p>Argentina ha producido una gran cantidad de tenistas destacados a lo largo de los años, y uno de los más prometedores de la actualidad es Francisco Cerúndolo. Nacido el 13 de agosto de 1998 en Buenos Aires, Cerúndolo ha ascendido rápidamente en el ranking ATP gracias a su consistencia, habilidades técnicas y mentalidad competitiva. Su estilo de juego, caracterizado por un potente golpe de derecha y su movilidad en la cancha, lo ha ayudado a destacarse en torneos importantes, especialmente en superficies de polvo de ladrillo, donde ha tenido varios de sus mejores desempeños.</p>
+<p>Cerúndolo ha logrado consolidarse entre los mejores tenistas argentinos de la nueva generación, mostrando gran potencial tanto en torneos nacionales como internacionales. En 2021, dio un gran paso al alcanzar la final del ATP de Buenos Aires, un logro que le permitió ingresar a la élite del tenis mundial. A lo largo de su carrera, ha demostrado tener una gran capacidad para adaptarse a distintas situaciones de juego, enfrentando a rivales de alto nivel y obteniendo victorias clave que han acelerado su progreso en el circuito, las cuales incluyen 3 titúlos ATP, en Bastad 2022, Eastbourne 2023 y Umag 2024.</p>
+<p>En este informe, se va a trabajar con una base de datos de 146 partidos, todos los partidos de la carrera de Fran desde su debut en 2020 hasta mayo del 2024 (no icluye el mencionado titulo en Umag de ese año) y cuenta con las siguientes variables:</p>
+<p><code>surface</code>: superficie del partido</p>
+<p><code>tourney_level</code>: nivel del torneo</p>
+<p><code>winner_name</code>: nombre del ganador</p>
+<p><code>loser_name</code>: nombre del perdedor</p>
+<p><code>best_of</code>: al mejor de cuantos sets fue el partido</p>
+<p><code>round</code>: ronda del torneo en la cual se jugó el partido</p>
+<p><code>minutes</code>: duración del parido en minutos</p>
+<p><code>fran_win</code>: variable indicadora de si Cerúndolo ganó o no el partido</p>
+<p><code>opp_hand</code>: mano habil del rival</p>
+<p><code>opp_age</code>: edad del rival</p>
+<p><code>opp_ht</code>: altura del rival</p>
+<p><code>opp_rank</code>: ranking del rival</p>
+<p><code>fran_rank</code>: ranking de Cerúndolo</p>
+<p><code>dif_rank</code>: diferencia de ranking entre Cerúndolo y el rival</p>
+<p><code>fran_age</code>: edad de Cerúndolo</p>
+<p><code>pct_fran_1stIn</code>: porcentaje de primeros servicios adentro de Cerúndolo</p>
+<p><code>pct_opp_1stIn</code>: porcentaje de primeros servicios adentro del rival</p>
+<p><code>pct_fran_1stWon</code>: porcentaje de primeros servicios ganados de Cerúndolo</p>
+<p><code>pct_opp_1stWon</code>: porcentaje de primeros servicios ganados del rival</p>
+<p><code>pct_fran_2ndWon</code>: porcentaje de segúndos servicios ganados de Cerúndolo</p>
+<p><code>pct_opp_2ndWon</code>: porcentaje de segúndos servicios ganados del rival</p>
+<p><code>pct_fran_df</code>: porcentaje de doble faltas sobre todos los puntos de servicio de Cerúndolo</p>
+<p><code>pct_opp_df</code>: porcentaje de doble faltas sobre todos los puntos de servicio del rival</p>
+<p><code>pct_fran_ace</code>: porcentaje de aces sobre todos los puntos de servicio de Cerúndolo</p>
+<p><code>pct_opp_ace</code>: porcentaje de aces sobre todos los puntos de servicio del rival</p>
+<p><code>pct_fran_bp_saved</code>: porcentaje de break points salvados de Cerúndolo</p>
+<p><code>pct_opp_bp_saved</code>: porcentaje de break points salvados del rival</p>
+<p><code>pct_fran_bp_wins</code>: porcentaje de break points ganados de Cerúndolo</p>
+<p><code>pct_opp_bp_wins</code>: porcentaje de break points ganados del rival</p>
+</section>
+<section id="objetivos" class="level2">
+<h2 class="anchored" data-anchor-id="objetivos">Objetivos</h2>
+<p>El objetivo de este trabajo es modelar la probabilidad de que Cerúndolo gane o no un partido en el circuito, basandose en algunas de las variables ya mencionadas. El análisis de estos factores no solo permite entender mejor los resultados, sino que también ayuda a prever cómo podría desenvolverse en futuros encuentros, lo que es útil tanto para entrenadores como para analistas deportivos.</p>
+<p>En resumen, Francisco Cerúndolo es una figura clave en el tenis argentino actual, y su evolución en el circuito profesional será de gran interés para quienes siguen el deporte, y lo que se buscará en este informe es detallar las claves en esta evolución.</p>
+</section>
+<section id="análisis-descriptivo" class="level2">
+<h2 class="anchored" data-anchor-id="análisis-descriptivo">Análisis descriptivo</h2>
+<section id="proporcion-de-victorias" class="level3">
+<h3 class="anchored" data-anchor-id="proporcion-de-victorias">Proporcion de victorias</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tp-mlg-manu_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Se puede observar que Fran ganó el 52.31% de sus partidos a lo largo de su carrera, lo cual es un gran desempeño para un jugador en sus primeros años en el circuito.</p>
+</section>
+<section id="resultados-por-superficie" class="level3">
+<h3 class="anchored" data-anchor-id="resultados-por-superficie">Resultados por superficie</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-a72224d70ce2dcf38757" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-a72224d70ce2dcf38757">{"x":{"data":[{"orientation":"v","width":0.89999999999999991,"base":0,"x":[1],"y":[48],"text":"count: 48<br />surface: Clay<br />surface: Clay","type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(238,121,66,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Clay","legendgroup":"Clay","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":0.89999999999999991,"base":0,"x":[1],"y":[38],"text":"count: 38<br />surface: Clay<br />surface: Clay","type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(238,121,66,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Clay","legendgroup":"Clay","showlegend":false,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":0.90000000000000013,"base":0,"x":[2],"y":[7],"text":"count:  7<br />surface: Grass<br />surface: Grass","type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(124,205,124,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Grass","legendgroup":"Grass","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":0.90000000000000013,"base":0,"x":[2],"y":[5],"text":"count:  5<br />surface: Grass<br />surface: Grass","type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(124,205,124,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Grass","legendgroup":"Grass","showlegend":false,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":0.90000000000000036,"base":0,"x":[3],"y":[24],"text":"count: 24<br />surface: Hard<br />surface: Hard","type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(58,95,205,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Hard","legendgroup":"Hard","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":0.90000000000000036,"base":0,"x":[3],"y":[29],"text":"count: 29<br />surface: Hard<br />surface: Hard","type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(58,95,205,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Hard","legendgroup":"Hard","showlegend":false,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":37.917808219178085,"r":7.3059360730593621,"b":40.182648401826491,"l":37.260273972602747},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xaxis":{"domain":[0,0.49592302674494454],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,3.6000000000000001],"tickmode":"array","ticktext":["Clay","Grass","Hard"],"tickvals":[1,2,3],"categoryorder":"array","categoryarray":["Clay","Grass","Hard"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"annotations":[{"text":"Superficie","x":0.5,"y":0,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"top","annotationType":"axis","yshift":-21.917808219178088},{"text":"Frecuencia","x":0,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis","xshift":-21.917808219178081},{"text":"Ganó","x":0.24796151337247227,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Perdió","x":0.7520384866275277,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-2.4000000000000004,50.399999999999999],"tickmode":"array","ticktext":["0","10","20","30","40","50"],"tickvals":[0,10,20,30,40,50],"categoryorder":"array","categoryarray":["0","10","20","30","40","50"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.49592302674494454,"y0":0,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.49592302674494454,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.5040769732550554,"x1":1,"y0":0,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.5040769732550554,"x1":1,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"}],"xaxis2":{"type":"linear","autorange":false,"range":[0.40000000000000002,3.6000000000000001],"tickmode":"array","ticktext":["Clay","Grass","Hard"],"tickvals":[1,2,3],"categoryorder":"array","categoryarray":["Clay","Grass","Hard"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.5040769732550554,1],"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"showlegend":false,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"3b005e932d3a":{"x":{},"fill":{},"type":"bar"}},"cur_data":"3b005e932d3a","visdat":{"3b005e932d3a":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Se puede apreciar que la mayor cantidad de partidos los jugó en polvo de ladrillo, algo común en jugadores argentinos, y muy pocos partidos en cesped, ya que es la superficie con menos torneos en el circuito. En cuanto a cantidad de victorias, se ve que la superficie que mas ganó fue en polvo de ladrillo.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Tabla 1: Proporción de victorias según superficie</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; font-weight: bold; color: black !important; background-color: rgba(99, 184, 255, 255) !important;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold; color: black !important; background-color: rgba(99, 184, 255, 255) !important;">Ganó</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold; color: black !important; background-color: rgba(99, 184, 255, 255) !important;">Perdió</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left; color: black !important; background-color: rgba(238, 121, 66, 255) !important;">Clay</td>
+<td style="text-align: right; color: black !important; background-color: rgba(238, 121, 66, 255) !important;">0.56</td>
+<td style="text-align: right; color: black !important; background-color: rgba(238, 121, 66, 255) !important;">0.44</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; color: black !important; background-color: rgba(124, 205, 124, 255) !important;">Grass</td>
+<td style="text-align: right; color: black !important; background-color: rgba(124, 205, 124, 255) !important;">0.58</td>
+<td style="text-align: right; color: black !important; background-color: rgba(124, 205, 124, 255) !important;">0.42</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; color: black !important; background-color: rgba(58, 95, 205, 255) !important;">Hard</td>
+<td style="text-align: right; color: black !important; background-color: rgba(58, 95, 205, 255) !important;">0.45</td>
+<td style="text-align: right; color: black !important; background-color: rgba(58, 95, 205, 255) !important;">0.55</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p>Y en la Tabla 1, se ve que tanto en polvo de ladrillo como en cesped tiene un record positivo (más victorias que derrotas), en cambio en canchas duras posee un record negativo.</p>
+</section>
+<section id="resultados-por-ronda" class="level3">
+<h3 class="anchored" data-anchor-id="resultados-por-ronda">Resultados por ronda</h3>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Tabla 2: Resultados por ronda</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; font-weight: bold; color: black !important; background-color: rgba(99, 184, 255, 255) !important;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold; color: black !important; background-color: rgba(99, 184, 255, 255) !important;">Ganó</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold; color: black !important; background-color: rgba(99, 184, 255, 255) !important;">Perdió</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">RR</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">R128</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">R64</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">R32</td>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">R16</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">QF</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SF</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p>En la Tabla 1, se puede ver que tiene un record equilibrado en cada una de las rondas que se juegan dentro de los diferentes torneos del circuito, destacando su record de 2 ganados y 2 perdidos en finales, y asi obteniendo sus únicos 2 titulos ATP hasta el momento. Se puede sospechar que la ronda en la cual juegue Frank, no parece influir en la probablidad de conseguir una victoria.</p>
+</section>
+<section id="resultados-según-la-mano-habil-del-rival" class="level3">
+<h3 class="anchored" data-anchor-id="resultados-según-la-mano-habil-del-rival">Resultados según la mano habil del rival</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tp-mlg-manu_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Vemos que la mayor cantidad de jugadores en el circuito son derechos, por lo que se observa que la mayor cantidad de rivales de fran son derechos, mientras que vemos que la proporcion de victorias y derrotas es similar tanto para jugadores diestros como para los zurdos. Lo cual nos da indicios de que esta variable no parecería influir en la respuesta.</p>
+</section>
+<section id="distribución-de-la-edad-y-la-altura-del-rival-según-el-resultado" class="level3">
+<h3 class="anchored" data-anchor-id="distribución-de-la-edad-y-la-altura-del-rival-según-el-resultado">Distribución de la edad y la altura del rival según el resultado</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tp-mlg-manu_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tp-mlg-manu_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Tanto la edad como la altura del rival no parecen ser muy influyentes a la hora de evidenciar la posibilidad de un resultado. Ver si se puede agregar una linea punteada que indique la media, o ver si se puede hacer interactivo</p>
+</section>
+<section id="distribución-de-la-duracion-de-los-partidos-según-el-resultado" class="level3">
+<h3 class="anchored" data-anchor-id="distribución-de-la-duracion-de-los-partidos-según-el-resultado">Distribución de la duracion de los partidos según el resultado</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tp-mlg-manu_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Al observar las distribuciones en la duracion de los partidos que gano y que perdio, parecen no diferir demasiado, por lo que podria no ser un factor influyente en la probabilidad de ganar un partido.</p>
+</section>
+<section id="distribución-del-ranking-del-rival-según-el-resultado" class="level3">
+<h3 class="anchored" data-anchor-id="distribución-del-ranking-del-rival-según-el-resultado">Distribución del ranking del rival según el resultado</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-11f08d01b3b44b630f9e" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-11f08d01b3b44b630f9e">{"x":{"data":[{"orientation":"v","width":[52.555555555555557,52.555555555555571,52.555555555555571,52.555555555555543,52.555555555555543,52.555555555555628,52.555555555555543,52.555555555555543,52.555555555555543,52.555555555555543],"base":[0,0,0,0,0,0,0,0,0,0],"x":[0,52.555555555555557,105.11111111111113,157.66666666666669,210.22222222222223,262.77777777777783,315.33333333333337,367.88888888888891,420.44444444444446,473],"y":[17,36,13,6,2,1,1,0,1,1],"text":["count: 17<br />opp_rank:   0.00000<br />fran_win: Ganó","count: 36<br />opp_rank:  52.55556<br />fran_win: Ganó","count: 13<br />opp_rank: 105.11111<br />fran_win: Ganó","count:  6<br />opp_rank: 157.66667<br />fran_win: Ganó","count:  2<br />opp_rank: 210.22222<br />fran_win: Ganó","count:  1<br />opp_rank: 262.77778<br />fran_win: Ganó","count:  1<br />opp_rank: 315.33333<br />fran_win: Ganó","count:  0<br />opp_rank: 367.88889<br />fran_win: Ganó","count:  1<br />opp_rank: 420.44444<br />fran_win: Ganó","count:  1<br />opp_rank: 473.00000<br />fran_win: Ganó"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(54,100,139,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Ganó","legendgroup":"Ganó","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[52.555555555555557,52.555555555555571,52.555555555555571,52.555555555555543,52.555555555555543,52.555555555555628,52.555555555555543,52.555555555555543,52.555555555555543,52.555555555555543],"base":[0,0,0,0,0,0,0,0,0,0],"x":[0,52.555555555555557,105.11111111111113,157.66666666666669,210.22222222222223,262.77777777777783,315.33333333333337,367.88888888888891,420.44444444444446,473],"y":[30,26,10,4,0,1,0,0,1,0],"text":["count: 30<br />opp_rank:   0.00000<br />fran_win: Perdió","count: 26<br />opp_rank:  52.55556<br />fran_win: Perdió","count: 10<br />opp_rank: 105.11111<br />fran_win: Perdió","count:  4<br />opp_rank: 157.66667<br />fran_win: Perdió","count:  0<br />opp_rank: 210.22222<br />fran_win: Perdió","count:  1<br />opp_rank: 262.77778<br />fran_win: Perdió","count:  0<br />opp_rank: 315.33333<br />fran_win: Perdió","count:  0<br />opp_rank: 367.88889<br />fran_win: Perdió","count:  1<br />opp_rank: 420.44444<br />fran_win: Perdió","count:  0<br />opp_rank: 473.00000<br />fran_win: Perdió"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(99,184,255,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Perdió","legendgroup":"Perdió","showlegend":true,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null},{"x":[61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,61],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"text":"x: 61<br />fran_win: Ganó<br />y: 0","type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(54,100,139,1)","opacity":1,"size":11.338582677165356,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,0,255,1)"}},"hoveron":"points","name":"Ganó","legendgroup":"Ganó","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"text":"x: 36<br />fran_win: Perdió<br />y: 0","type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(99,184,255,1)","opacity":1,"size":11.338582677165356,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,0,255,1)"}},"hoveron":"points","name":"Perdió","legendgroup":"Perdió","showlegend":false,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":37.917808219178085,"r":7.3059360730593621,"b":40.182648401826491,"l":37.260273972602747},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xaxis":{"domain":[0,0.49592302674494454],"automargin":true,"type":"linear","autorange":false,"range":[-52.555555555555557,525.55555555555554],"tickmode":"array","ticktext":["0","100","200","300","400","500"],"tickvals":[0,99.999999999999986,200,300,400,500],"categoryorder":"array","categoryarray":["0","100","200","300","400","500"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"annotations":[{"text":"Ranking del opponente","x":0.5,"y":0,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"top","annotationType":"axis","yshift":-21.917808219178088},{"text":"Frecuencia","x":0,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis","xshift":-21.917808219178081},{"text":"Ganó","x":0.24796151337247227,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Perdió","x":0.7520384866275277,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1.8,37.799999999999997],"tickmode":"array","ticktext":["0","10","20","30"],"tickvals":[0,10.000000000000002,20,30],"categoryorder":"array","categoryarray":["0","10","20","30"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.49592302674494454,"y0":0,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0,"x1":0.49592302674494454,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.5040769732550554,"x1":1,"y0":0,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0.5040769732550554,"x1":1,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"}],"xaxis2":{"type":"linear","autorange":false,"range":[-52.555555555555557,525.55555555555554],"tickmode":"array","ticktext":["0","100","200","300","400","500"],"tickvals":[0,99.999999999999986,200,300,400,500],"categoryorder":"array","categoryarray":["0","100","200","300","400","500"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.5040769732550554,1],"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"3b0054b63cee":{"x":{},"fill":{},"type":"bar"},"3b0057697740":{"x":{},"fill":{},"y":{}},"3b004fd24c0a":{"x":{},"fill":{},"y":{}}},"cur_data":"3b0054b63cee","visdat":{"3b0054b63cee":["function (y) ","x"],"3b0057697740":["function (y) ","x"],"3b004fd24c0a":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Se observan distribuciones en los rankings de los oponentes de Fran asimetricas a la derecha, tanto si gana como si pierde. Esto es debido a que en pocas competiciones (por ejemplo Copa Davis o Grand Slams) participan jugadores de menor categoria, pero la gran mayoria de los jugadores del circuito se encuentran dentro del top 150 del ranking.</p>
+<p>La mediana del ranking de los oponentes cuando Fran gana es de 61, mientras que cuando pierde de 36, lo que muestra que el ranking podria ser decisivo a la hora de analizar la probabilidad de ganar un partido.</p>
+</section>
+<section id="resultados-según-el-nivel-del-torneo" class="level3">
+<h3 class="anchored" data-anchor-id="resultados-según-el-nivel-del-torneo">Resultados según el nivel del torneo</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tp-mlg-manu_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La mayoría de sus partidos y victorias fueron en los torneos de menor nivel del circuito (ATP 250 y ATP 500). Al tener proporciones de victorias parecidas en todos los niveles de torneos, parece no influir el nivel del torneo en la variable respuesta.</p>
+</section>
+<section id="radar-chart-para-estadísticas-del-juego-según-el-resultado" class="level3">
+<h3 class="anchored" data-anchor-id="radar-chart-para-estadísticas-del-juego-según-el-resultado">Radar chart para estadísticas del juego según el resultado</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tp-mlg-manu_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tp-mlg-manu_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="modelo-estadístico" class="level2">
+<h2 class="anchored" data-anchor-id="modelo-estadístico">Modelo Estadístico</h2>
+<section id="selección-de-variables" class="level4">
+<h4 class="anchored" data-anchor-id="selección-de-variables">Selección de variables</h4>
+<p>Dejamos solo las variables de interes</p>
+<p>Planteamos todos los modelos univariados y vemos que variables son significativas para el modelo</p>
+<p>Paso a paso</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'MASS'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:plotly':
+
+    select</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:dplyr':
+
+    select</code></pre>
+</div>
+</div>
+<p>Luego de una larga y detallada selección de modelo, se retienen las siguientes variables: Edad del oponente, porcentaje de puntos ganados con el primer servicio, porcentaje de puntos ganados del rival con el primer servicio, porcentaje de puntos ganados por el rival con el segundo servicio, porcentaje de puntos de break point ganados por Fran y el porcentaje de puntos de break point ganados por el rival.</p>
+<p>La edad del rival tiene un p_value del test de wald de 0.1, podríamos ver si es realmente significativa para el modelo a través de un test de razón de verosimilitud</p>
+</section>
+</section>
+<section id="adecuación-de-la-función-de-enlace" class="level2">
+<h2 class="anchored" data-anchor-id="adecuación-de-la-función-de-enlace">Adecuación de la función de enlace</h2>
+<section id="test-de-hipótesis" class="level3">
+<h3 class="anchored" data-anchor-id="test-de-hipótesis">Test de hipótesis</h3>
+<p>Parece ser adecuada la funcion de enlace</p>
+</section>
+</section>
+<section id="análisis-de-residuos" class="level2">
+<h2 class="anchored" data-anchor-id="análisis-de-residuos">Análisis de residuos</h2>
+<section id="evaluación-de-la-componente-sistemática" class="level3">
+<h3 class="anchored" data-anchor-id="evaluación-de-la-componente-sistemática">Evaluación de la componente sistemática</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Residuos cuantil</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>rQ.final <span class="ot">&lt;-</span> <span class="fu">qresid</span>(modelo_final)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="do">### Gráfico de residuos cuantil vs. probabilidades estimadas (ajuste logit)</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>G1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(cerundolo_modelo, <span class="fu">aes</span>(<span class="at">y =</span> rQ.final, <span class="at">x =</span> <span class="fu">fitted</span>(modelo_final))) <span class="sc">+</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">fill =</span> <span class="st">"orange"</span>, <span class="at">shape =</span> <span class="dv">21</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>) <span class="sc">+</span> <span class="fu">ylim</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="sc">-</span><span class="dv">3</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span> </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span>  <span class="dv">3</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Gráfico de residuos cuantil vs. las probabilidades estimadas"</span>, <span class="at">x =</span> <span class="fu">expression</span>(<span class="fu">hat</span>(pi)), <span class="at">y =</span> <span class="st">"Residuos cuantil"</span>) <span class="sc">+</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>G1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tp-mlg-manu_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="1021"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="evaluación-de-la-componente-aleatoria" class="level3">
+<h3 class="anchored" data-anchor-id="evaluación-de-la-componente-aleatoria">Evaluación de la componente aleatoria</h3>
+<p>Mediante un gráfico QQ puede evaluarse si la distribución supuesta es adecuada. la distribucion de la variable latente?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfico QQ</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>G2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(cerundolo_modelo, <span class="fu">aes</span>(<span class="at">sample =</span> rQ.final)) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>(<span class="at">distribution =</span> qnorm, <span class="at">fill =</span> <span class="st">"orange"</span>, <span class="at">shape =</span> <span class="dv">21</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Gráfico probabilístico normal con residuos cuantil"</span>,  <span class="at">x =</span> <span class="st">"Cuantiles teóricos"</span>, <span class="at">y =</span> <span class="st">"Cuantiles de los residuos cuantil"</span>) <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>G2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tp-mlg-manu_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="1021"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="evaluación-de-linealidad" class="level2">
+<h2 class="anchored" data-anchor-id="evaluación-de-linealidad">Evaluación de Linealidad</h2>
+<p>El modelo final resulta</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>corrplot 0.92 loaded</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 pct_fran_1stIn pct_opp_1stIn pct_fran_1stWon pct_opp_1stWon
+pct_fran_1stIn             1.00          0.13           -0.04          -0.13
+pct_opp_1stIn              0.13          1.00           -0.20           0.03
+pct_fran_1stWon           -0.04         -0.20            1.00          -0.04
+pct_opp_1stWon            -0.13          0.03           -0.04           1.00
+pct_fran_2ndWon            0.07         -0.05            0.10          -0.09
+pct_opp_2ndWon            -0.14          0.09           -0.15           0.14
+pct_fran_bp_wins          -0.02         -0.17            0.03          -0.27
+pct_opp_bp_wins           -0.07          0.09           -0.23           0.17
+                 pct_fran_2ndWon pct_opp_2ndWon pct_fran_bp_wins
+pct_fran_1stIn              0.07          -0.14            -0.02
+pct_opp_1stIn              -0.05           0.09            -0.17
+pct_fran_1stWon             0.10          -0.15             0.03
+pct_opp_1stWon             -0.09           0.14            -0.27
+pct_fran_2ndWon             1.00          -0.13             0.04
+pct_opp_2ndWon             -0.13           1.00            -0.28
+pct_fran_bp_wins            0.04          -0.28             1.00
+pct_opp_bp_wins            -0.29           0.19            -0.13
+                 pct_opp_bp_wins
+pct_fran_1stIn             -0.07
+pct_opp_1stIn               0.09
+pct_fran_1stWon            -0.23
+pct_opp_1stWon              0.17
+pct_fran_2ndWon            -0.29
+pct_opp_2ndWon              0.19
+pct_fran_bp_wins           -0.13
+pct_opp_bp_wins             1.00</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tp-mlg-manu_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: carData</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'car'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:dplyr':
+
+    recode</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:purrr':
+
+    some</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                     GVIF Df GVIF^(1/(2*Df))
+pct_fran_1stWon  2.297297  1        1.515684
+cat2             5.507526  4        1.237712
+pct_fran_2ndWon  2.480265  1        1.574886
+pct_opp_2ndWon   2.261995  1        1.503993
+pct_fran_bp_wins 2.098956  1        1.448777
+pct_opp_bp_wins  1.522947  1        1.234077</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = fran_win1 ~ pct_fran_1stWon + cat2 + pct_fran_2ndWon + 
+    pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, family = binomial(link = "logit"), 
+    data = cerundolo_modelo)
+
+Coefficients:
+                 Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)       -16.233      6.669  -2.434 0.014934 *  
+pct_fran_1stWon    36.196      8.565   4.226 2.38e-05 ***
+cat2(0.6,0.65]     -3.867      1.637  -2.363 0.018141 *  
+cat2(0.65,0.7]     -5.630      1.819  -3.096 0.001963 ** 
+cat2(0.7,0.75]     -5.209      1.516  -3.436 0.000591 ***
+cat2(0.75,Inf]    -12.432      2.903  -4.283 1.85e-05 ***
+pct_fran_2ndWon    19.616      5.811   3.376 0.000736 ***
+pct_opp_2ndWon    -26.492      7.788  -3.402 0.000670 ***
+pct_fran_bp_wins    8.884      3.206   2.771 0.005588 ** 
+pct_opp_bp_wins    -7.402      3.255  -2.274 0.022946 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 202.152  on 145  degrees of freedom
+Residual deviance:  43.976  on 136  degrees of freedom
+AIC: 63.976
+
+Number of Fisher Scoring iterations: 8</code></pre>
+</div>
+</div>
+<p>plantear el modelo estimado</p>
+</section>
+<section id="interpretación-y-resultados" class="level2">
+<h2 class="anchored" data-anchor-id="interpretación-y-resultados">Interpretación y Resultados</h2>
+<section id="razones-de-odds" class="level3">
+<h3 class="anchored" data-anchor-id="razones-de-odds">Razones de Odds</h3>
+<section id="variables-continuas" class="level4">
+<h4 class="anchored" data-anchor-id="variables-continuas">Variables continuas</h4>
+<p>Graficamos las curvas estimadas para las distintas variables explicativas con las que contamos</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tp-mlg-manu_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Observamos que la tasa de cambio en la probabilidad de victoria de Fran será mas alta para la variable “Porcentaje de puntos realizados con el primer servicio”.</p>
+</section>
+<section id="variable-incorporada-con-dummies" class="level4">
+<h4 class="anchored" data-anchor-id="variable-incorporada-con-dummies">Variable incorporada con Dummies</h4>
+</section>
+</section>
+</section>
+<section id="predicciones" class="level2">
+<h2 class="anchored" data-anchor-id="predicciones">Predicciones</h2>
+<p>Para trabajar con las predicciones, se trabaja con una base de datos de los 24 partidos de Fran, luego del último partido cargado en la base principal</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Tabla 3: Predichos vs. Observados</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; font-weight: bold; color: black !important; background-color: rgba(99, 184, 255, 255) !important;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold; color: black !important; background-color: rgba(99, 184, 255, 255) !important;">Perdió</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold; color: black !important; background-color: rgba(99, 184, 255, 255) !important;">Ganó</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Perdió</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">Ganó</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">12</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+</section>
+<section id="conclusiones" class="level2">
+<h2 class="anchored" data-anchor-id="conclusiones">Conclusiones</h2>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
