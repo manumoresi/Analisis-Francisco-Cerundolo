@@ -9,29 +9,23 @@ editor: visual
 
 El tenis es uno de los deportes más populares del mundo, jugado por millones de personas a lo largo de todo el planeta, y se caracteriza por la destreza técnica, el esfuerzo físico y el análisis estratégico que requiere.
 
-A nivel profesional, el circuito mas prestigioso es el de la ATP (Association of Tennis Professionals), en donde estan los jugadores mas prestigiosos del planeta, compitiendo en diferentes torneos de diferentes categorías y superficies (polvo de ladrillo, cesped y canchas duras). En este circuito existe un ranking de jugadores, el cual los ubica segun sus resultados en el año, y se actualiza cada semana, siendo la posicion nº 1 el mejor tenista de la actualidad.
+A nivel profesional, el circuito mas prestigioso es el de la ATP (Association of Tennis Professionals), en donde estan los mejores jugadores del planeta, compitiendo en diferentes torneos de diferentes categorías y superficies (polvo de ladrillo, cesped y canchas duras). En este circuito existe un ranking de jugadores, el cual los ubica segun sus resultados en el año, y se actualiza cada semana, siendo la posicion nº 1 el mejor tenista de la actualidad.
 
 Argentina ha producido una gran cantidad de tenistas destacados a lo largo de los años, y uno de los más prometedores de la actualidad es Francisco Cerúndolo. Nacido el 13 de agosto de 1998 en Buenos Aires, Cerúndolo ha ascendido rápidamente en el ranking ATP gracias a su consistencia, habilidades técnicas y mentalidad competitiva. Su estilo de juego, caracterizado por un potente golpe de derecha y su movilidad en la cancha, lo ha ayudado a destacarse en torneos importantes, especialmente en superficies de polvo de ladrillo, donde ha tenido varios de sus mejores desempeños.
 
 Cerúndolo ha logrado consolidarse entre los mejores tenistas argentinos de la nueva generación, mostrando gran potencial tanto en torneos nacionales como internacionales. En 2021, dio un gran paso al alcanzar la final del ATP de Buenos Aires, un logro que le permitió ingresar a la élite del tenis mundial. A lo largo de su carrera, ha demostrado tener una gran capacidad para adaptarse a distintas situaciones de juego, enfrentando a rivales de alto nivel y obteniendo victorias clave que han acelerado su progreso en el circuito, las cuales incluyen 3 titúlos ATP, en Bastad 2022, Eastbourne 2023 y Umag 2024.
 
-En este informe, se va a trabajar con una base de datos de 146 partidos, todos los partidos de la carrera de Fran desde su debut en 2020 hasta mayo del 2024 (no icluye el mencionado titulo en Umag de ese año) y cuenta con las siguientes variables:
+En este informe, se va a trabajar con una base de datos de 146 partidos, es decir todos los partidos de la carrera de Fran desde su debut en 2020 hasta mayo del 2024 (no incluye el mencionado titulo en Umag de ese año) y cuenta con las siguientes variables:
+
+`fran_win`: variable indicadora de si Cerúndolo ganó o no el partido
 
 `surface`: superficie del partido
 
 `tourney_level`: nivel del torneo
 
-`winner_name`: nombre del ganador
-
-`loser_name`: nombre del perdedor
-
-`best_of`: al mejor de cuantos sets fue el partido
-
-`round`: ronda del torneo en la cual se jugó el partido 
+`round`: ronda del torneo en la cual se jugó el partido
 
 `minutes`: duración del parido en minutos
-
-`fran_win`: variable indicadora de si Cerúndolo ganó o no el partido
 
 `opp_hand`: mano habil del rival
 
@@ -41,11 +35,7 @@ En este informe, se va a trabajar con una base de datos de 146 partidos, todos l
 
 `opp_rank`: ranking del rival
 
-`fran_rank`: ranking de Cerúndolo
-
 `dif_rank`: diferencia de ranking entre Cerúndolo y el rival
-
-`fran_age`: edad de Cerúndolo
 
 `pct_fran_1stIn`: porcentaje de primeros servicios adentro de Cerúndolo
 
@@ -63,7 +53,7 @@ En este informe, se va a trabajar con una base de datos de 146 partidos, todos l
 
 `pct_opp_df`: porcentaje de doble faltas sobre todos los puntos de servicio del rival
 
-`pct_fran_ace`: porcentaje de aces sobre todos los puntos de servicio de Cerúndolo 
+`pct_fran_ace`: porcentaje de aces sobre todos los puntos de servicio de Cerúndolo
 
 `pct_opp_ace`: porcentaje de aces sobre todos los puntos de servicio del rival
 
@@ -224,7 +214,7 @@ ggplotly(g)
 
 ```
 
-Se puede apreciar que la mayor cantidad de partidos los jugó en polvo de ladrillo, algo común en jugadores argentinos, y muy pocos partidos en cesped, ya que es la superficie con menos torneos en el circuito. En cuanto a cantidad de victorias, se ve que la superficie que mas ganó fue en polvo de ladrillo.
+Se puede apreciar que la mayor cantidad de partidos los jugó en polvo de ladrillo, algo común en jugadores argentinos, y muy pocos partidos en cesped, ya que es la superficie con menos torneos en el circuito. 
 
 ```{r, echo=FALSE, warning=FALSE}
 tabla_s=table(cerundolo_final1$surface, cerundolo_final1$fran_win)
@@ -238,7 +228,7 @@ tabla1=kable(round(tabla_prop,2), caption = "Tabla 1: Proporción de victorias s
 tabla1
 ```
 
-Y en la Tabla 1, se ve que tanto en polvo de ladrillo como en cesped tiene un record positivo (más victorias que derrotas), en cambio en canchas duras posee un record negativo.
+Y en la Tabla 1, se ve que tanto en polvo de ladrillo como en cesped tiene un record positivo (más victorias que derrotas), en cambio en canchas duras posee un record negativo. *A pesar de ver diferencias en las proporciones de victorias según la superficie, estas son relativamente pequeñas, por lo cual no pareciera que tenga una influencia significativa en la respuesta.*
 
 ### Resultados por ronda
 
@@ -251,7 +241,7 @@ tabla2 = kable(tabla, caption = "Tabla 2: Resultados por ronda") %>% kable_styli
 tabla2
 ```
 
-En la Tabla 1, se puede ver que tiene un record equilibrado en cada una de las rondas que se juegan dentro de los diferentes torneos del circuito, destacando su record de 2 ganados y 2 perdidos en finales, y asi obteniendo sus únicos 2 titulos ATP hasta el momento. Se puede sospechar que la ronda en la cual juegue Frank, no parece influir en la probablidad de conseguir una victoria.
+En la Tabla 2, se puede ver que tiene un record equilibrado en cada una de las rondas que se juegan dentro de los diferentes torneos del circuito. Se puede sospechar que la ronda en la cual juegue Frank, no parece influir en la probablidad de conseguir una victoria.
 
 ### Resultados según la mano habil del rival
 
@@ -259,19 +249,18 @@ En la Tabla 1, se puede ver que tiene un record equilibrado en cada una de las r
 library(vcd)
 library(plotly)
 g1=mosaic(
-  formula = ~ fran_win + opp_hand, 
+  formula = ~  fran_win + opp_hand , 
   data = cerundolo_final1, 
   direction = "v",
   highlighting = "opp_hand", 
-  highlighting_fill = c("steelblue1","steelblue4"),
+  highlighting_fill = c("steelblue4","steelblue1"),
   labeling = labeling_border, 
        labeling_args = list(gp_labels = gpar(col = "black", fontsize = 12),  
                             gp_varnames = gpar(col = "white", fontsize = 14))) 
        #main = "Resultados según la mano habil del rival")
 
 ```
-
-Vemos que la mayor cantidad de jugadores en el circuito son derechos, por lo que se observa que la mayor cantidad de rivales de fran son derechos, mientras que vemos que la proporcion de victorias y derrotas es similar tanto para jugadores diestros como para los zurdos. Lo cual nos da indicios de que esta variable no parecería influir en la respuesta.
+Se sabe que la mayor cantidad de jugadores en el circuito son derechos, por lo que se observa que la mayor cantidad de rivales de Fran son derechos, mientras que vemos que la proporción de victorias y derrotas es similar tanto para jugadores diestros como para los zurdos. Lo cual da indicio de que esta variable no parecería influir en la respuesta.
 
 ### Distribución de la edad y la altura del rival según el resultado
 
@@ -303,7 +292,7 @@ ggplot(cerundolo_final1) +
 
 ```
 
-Tanto la edad como la altura del rival no parecen ser muy influyentes a la hora de evidenciar la posibilidad de un resultado. Ver si se puede agregar una linea punteada que indique la media, o ver si se puede hacer interactivo
+Tanto la edad como la altura del rival no parecen ser muy influyentes a la hora de evidenciar la posibilidad de un resultado. 
 
 ### Distribución de la duracion de los partidos según el resultado
 
@@ -315,8 +304,7 @@ ggplot(cerundolo_final1) +
   theme(legend.position = "none")+
   scale_fill_manual(values = c("Perdió"="steelblue1","Ganó"="steelblue4"))
 ```
-
-Al observar las distribuciones en la duracion de los partidos que gano y que perdio, parecen no diferir demasiado, por lo que podria no ser un factor influyente en la probabilidad de ganar un partido.
+Al observar las distribuciones en la duración de los partidos que ganó y que perdió, parecen no diferir demasiado, por lo que podria no ser un factor influyente en la probabilidad de ganar un partido.
 
 ### Distribución del ranking del rival según el resultado
 
@@ -357,9 +345,7 @@ ggplot(cerundolo_final1) +
 
 
 ```
-
-La mayoría de sus partidos y victorias fueron en los torneos de menor nivel del circuito (ATP 250 y ATP 500). Al tener proporciones de victorias parecidas en todos los niveles de torneos, parece no influir el nivel del torneo en la variable respuesta.
-
+La mayoría de sus partidos y victorias fueron en los torneos de menor nivel del circuito (ATP 250 y ATP 500). Al tener proporciones de victorias parecidas en todos los niveles de torneos, parece no influir en la variable respuesta.
 
 ### Radar chart para estadísticas del juego según el resultado
 
@@ -425,6 +411,7 @@ title(main = "Estadistícas de juego de Cerúndolo")
 
 
 ```
+Se observa que las estadística de juego de Fran van a presentar en general mejores porcentajes en los partidos en los cuales el gana, viendo que el porcentaje de primeros servicios en juego y de dobles faltas son las estadisticas que menor diferencia presentan en relación a sí gana o pierde el partido.
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 
@@ -478,25 +465,25 @@ title(main = "Estadísticas de juego del rival")
 
 
 ```
+De manera concordante con lo visto en el grafico anterior, se ve que las estadísticas de juego del rival serán en general mayores cuando Fran pierda el partido, quedando en evidencia una gran diferencia en los puntos de primer servicio ganados.
+
 
 ## Modelo Estadístico
 
 #### Selección de variables
 
-Dejamos solo las variables de interes
+Para decidir que variables resultan significativas en la respuesta, se realiza una selección de variables "paso a paso", con todas las variables definidas anteriormente. Para este procedimiento se utilizará la variable `dif_rank` en vez de la variable `opp_rank`, ya que parece más adecuado trabajar con la diferencia de ranking al momento del partido debido a que el ranking de Fran varía mucho desde su debut hasta el día de hoy. 
 
-```{r, echo=FALSE, warning=FALSE, results='hide'}
+El método automático utilizado para esta selección de variables, se basa en la diferencia de AIC entre los modelos para decidir cual es modelo óptimo a utilizar.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
 cerundolo_modelo= subset(cerundolo_final1, select= c(surface,tourney_level,minutes,fran_win,opp_hand,opp_ht,opp_age,dif_rank,pct_fran_1stIn,pct_opp_1stIn,pct_fran_1stWon,pct_opp_1stWon,pct_fran_2ndWon,pct_opp_2ndWon,pct_fran_df,pct_opp_df,pct_fran_ace,pct_opp_ace,pct_fran_bp_wins,pct_opp_bp_wins,pct_fran_bp_saved,pct_opp_bp_saved))
 
 cerundolo_modelo = na.omit(cerundolo_modelo)
 ```
 
-Planteamos todos los modelos univariados y vemos que variables son significativas para el modelo
 
-Paso a paso
-
-```{r, echo=FALSE, warning=FALSE, results='hide'}
-library(MASS)
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide',}
 # Modelo completo
 cerundolo_modelo$fran_win1 = ifelse(cerundolo_modelo$fran_win == "Ganó",1,0)
 cerundolo_modelo = subset(cerundolo_modelo, select = -c(fran_win))
@@ -507,9 +494,9 @@ modelo_completo <- glm(fran_win1 ~ ., data = cerundolo_modelo, family = binomial
 modelo_seleccionado <- step(modelo_completo, direction = "both")
 ```
 
-Luego de una larga y detallada selección de modelo, se retienen las siguientes variables: Edad del oponente, porcentaje de puntos ganados con el primer servicio, porcentaje de puntos ganados del rival con el primer servicio, porcentaje de puntos ganados por el rival con el segundo servicio, porcentaje de puntos de break point ganados por Fran y el porcentaje de puntos de break point ganados por el rival.
+Luego de aplicar este método, se retienen las siguientes variables: edad del oponente, porcentaje de puntos ganados con el primer servicio, porcentaje de puntos ganados del rival con el primer servicio, porcentaje de puntos ganados por el rival con el segundo servicio, porcentaje de puntos de break point ganados por Fran y el porcentaje de puntos de break point ganados por el rival.
 
-```{r, echo=FALSE, warning=FALSE, results='hide'}
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
 modelo_final = glm(fran_win1 ~ opp_age + pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo,family = binomial(link="logit"))
 
 summary(modelo_final)
@@ -522,9 +509,13 @@ hltest(modelo_final)
 
 ```
 
-La edad del rival tiene un p_value del test de wald de 0.1, podríamos ver si es realmente significativa para el modelo a través de un test de razón de verosimilitud
+$modelo$
 
-```{r, echo=FALSE, warning=FALSE, results='hide'}
+Se realizó el test de Hosmer-Lemeshow para probar la bondad de ajuste del modelo, y se ubtuvo un $p-value=0.83$, por lo que se puede concluir que el modelo ajusta.
+
+Finalmente, se generaron dudas con respecto a la significancia de la variable `opp_age` en el modelo, debido a que en la parte descriptiva parecía no influir significativamente en la respuesta y presenta un $p-value=0.11$ en el test de Wald. Para probar si esta variable es realmente significtiva, se realiza un test de razónde verosimilitud comparandoel modelo propuesto con uno que no tenga la variable `opp_age`.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
 modelo_cuasi_final = glm(fran_win1 ~ pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo,family = binomial(link="logit"))
 
 anova(modelo_cuasi_final, modelo_final, test="LRT")
@@ -534,11 +525,13 @@ anova(modelo_cuasi_final, modelo_final, test="LRT")
 modelo_final = glm(fran_win1 ~ pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo,family = binomial(link="logit"))
 ```
 
+
+
 ## Adecuación de la función de enlace
 
 ### Test de hipótesis
 
-```{r, echo=FALSE, warning=FALSE, results='hide'}
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
 
 pred.logit<-predict(modelo_final)
 cerundolo_modelo$pred.2.logit<-pred.logit*pred.logit
@@ -556,7 +549,7 @@ Parece ser adecuada la funcion de enlace
 
 ### Evaluación de la componente sistemática
 
-```{r, fig.width = 4*1.33*2}
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.width = 4*1.33*2}
 # Residuos cuantil
 rQ.final <- qresid(modelo_final)
 
@@ -575,7 +568,7 @@ G1
 
 Mediante un gráfico QQ puede evaluarse si la distribución supuesta es adecuada. la distribucion de la variable latente?
 
-```{r, fig.width = 4*1.33*2}
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.width = 4*1.33*2}
 # Gráfico QQ
 G2 <- ggplot(cerundolo_modelo, aes(sample = rQ.final)) +
   stat_qq(distribution = qnorm, fill = "orange", shape = 21, size = 3) +
@@ -588,7 +581,7 @@ G2
 
 ## Evaluación de Linealidad
 
-```{r, echo=FALSE, warning=FALSE, results='hide'}
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
 
 cerundolo_modelo <- cerundolo_modelo %>%
   mutate(cat1= cut(pct_fran_1stWon, breaks = c(0, 0.59, 0.65, 0.693, 0.75, Inf)),
@@ -678,14 +671,14 @@ anova(modelo_l2,modelo_l1, test="LRT")
 
 El modelo final resulta
 
-```{r, echo=FALSE, warning=FALSE, results='hide'}
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
 modelo_final = glm(fran_win1 ~ pct_fran_1stWon + cat2 + pct_fran_2ndWon + 
     pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo, family=binomial(link="logit"))
 
 summary(modelo_final)
 ```
 
-```{r, echo=FALSE, warning=FALSE}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(corrplot)
 cerundolo_modelo[c(8,9,10,11,12,13,18,19)] %>% cor(method="pearson") %>% round(digits=2) -> mat_cor
 mat_cor
@@ -707,7 +700,7 @@ plantear el modelo estimado
 
 #### Variables continuas
 
-```{r, echo=FALSE, warning=FALSE, results='hide'}
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
 
 ro_1 = exp(36.196*(0.05))
 ro_1
@@ -726,9 +719,19 @@ ro_5
 
 ```
 
+`pct_fran_1stWon`: $\hat{RH}_{x+0.05vsx} = e^{\hat{\beta_{1}}*0.05} = e^{36.196*0.05} = 6.10$
+
+`pct_fran_2ndWon`: $\hat{RH}_{x+0.05vsx} = e^{\hat{\beta_{6}}*0.05} = e^{19.616*0.05} = 2.66$
+
+`pct_opp_2ndWon`: $\hat{RH}_{x-0.05vsx} = e^{\hat{\beta_{7}}*(-0.05)} = e^{(-26.462)*(-0.05)} = 3.75$
+
+`pct_fran_bp_wins`: $\hat{RH}_{x+0.1vsx} = e^{\hat{\beta_{8}}*0.1} = e^{8.884*0.1} = 2.43$
+
+`pct_opp_bp_wins`: $\hat{RH}_{x-0.1vsx} = e^{\hat{\beta_{9}}*(-0.1)} = e^{(-7.402)*(-0.1)} = 2.09$
+
 Graficamos las curvas estimadas para las distintas variables explicativas con las que contamos
 
-```{r, echo=FALSE, warning=FALSE}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 valores_var <- data.frame(pct_fran_1stWon = seq(0, 1, length.out = 100))
 
 # Puedes usar los valores medios o cualquier valor relevante
@@ -894,7 +897,7 @@ Observamos que la tasa de cambio en la probabilidad de victoria de Fran será ma
 
 #### Variable incorporada con Dummies
 
-```{r, echo=FALSE, warning=FALSE, results='hide'}
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
 
 ro_40 = exp(12.432)
 ro_41 = exp(-3.867-(-12.432))
@@ -933,7 +936,7 @@ prob_d4
 
 Para trabajar con las predicciones, se trabaja con una base de datos de los 24 partidos de Fran, luego del último partido cargado en la base principal
 
-```{r, echo=FALSE, warning=FALSE}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 cerundolo_prediccion <- read_excel("C:/Users/Usuario/Desktop/Estadistica/Analisis-Francisco-Cerundolo/cerundolo_prediccion.xlsx")
 
 cerundolo_prediccion1 = subset(cerundolo_prediccion, select = -c(fran_win))
@@ -965,8 +968,4 @@ tabla3
 
 ```
 
-
-
-
 ## Conclusiones
-
