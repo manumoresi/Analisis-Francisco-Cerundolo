@@ -35,8 +35,6 @@ En este informe, se va a trabajar con una base de datos de 146 partidos, es deci
 
 `opp_rank`: ranking del rival
 
-`dif_rank`: diferencia de ranking entre Cerúndolo y el rival
-
 `pct_fran_1stIn`: porcentaje de primeros servicios adentro de Cerúndolo
 
 `pct_opp_1stIn`: porcentaje de primeros servicios adentro del rival
@@ -233,7 +231,7 @@ tabla1=kable(round(tabla_prop,2), caption = "Tabla 1: Proporción de victorias s
 tabla1
 ```
 
-Y en la Tabla 1, se ve que tanto en polvo de ladrillo como en cesped tiene un record positivo (más victorias que derrotas), en cambio en canchas duras posee un record negativo. *A pesar de ver diferencias en las proporciones de victorias según la superficie, estas son relativamente pequeñas, por lo cual no pareciera que tenga una influencia significativa en la respuesta.*
+Y en la Tabla 1, se ve que tanto en polvo de ladrillo como en cesped tiene un record positivo (más victorias que derrotas), en cambio en canchas duras posee un record negativo.
 
 ### Resultados por ronda
 
@@ -699,7 +697,7 @@ Se aprecia que los datos se ajustan a la recta, por lo tanto el modelo parece se
 
 #### Multicolinealidad
 
-Al contar con cinco variables explicativas continuas, sería nevesario evaluar la presencia de multicolinealidad de dichas variables, la cual podría estar influenciando los resultados del modelo. Para esto se calcula la matriz de correlación de dichas variables y el factor de inflación de la variancia (VIF).
+Al contar con cinco variables explicativas continuas, será necesario evaluar la presencia de multicolinealidad de dichas variables, la cual podría estar influenciando los resultados del modelo. Para esto se calcula la matriz de correlación de dichas variables y el factor de inflación de la variancia (VIF).
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(corrplot)
@@ -968,7 +966,7 @@ $\hat{\pi}_{(0.7,0.75)} = 0.5707$
 
 $\hat{\pi}_{(0.75,Inf)} = 0.0009$
 
-Se puede concluir que si Francisco logra dejar a su rival en menos del 65% de puntos ganados con el primer servicio, las probabilidades de ganar el partido son mul altas. Mientras que si el porcentaje de puntos ganados con el primer servicio del rival ronda entra el 65% y 75%, se puede pensar que cualquiera de los dos jugadores puede quedarse con el partido. Por último si el rival de Fran gana mas del 75% de los puntos con el primer servicio, la probabilidad de ganar el partido para el argentino seran muy bajas.
+Se puede concluir que si Francisco logra dejar a su rival en menos del 65% de puntos ganados con el primer servicio, las probabilidades de ganar el partido son muy altas. Mientras que si el porcentaje de puntos ganados con el primer servicio del rival ronda entra el 65% y 75%, se puede pensar que cualquiera de los dos jugadores puede quedarse con el partido. Por último si el rival de Fran gana mas del 75% de los puntos con el primer servicio, la probabilidad de ganar el partido para el argentino seran muy bajas.
 
 ## Predicciones
 
@@ -1004,7 +1002,7 @@ tabla3
 
 ```
 
-En la Tabla 3, se puede observar que el modelo predijo que Fran iba a perder de manera acertada 9 de 11 veces (especifidad del 81.8%) y predijo que fran iba a ganar de manera acertada 12 de 13 veces (sensibilidad del 92.3%). A pesar de probarlo con pocos datos, el modelo parece tener una buena capacidad predictiva (accuracy del 87.5%).
+En la Tabla 3, se puede observar que el modelo predijo que Fran iba a perder de manera acertada 9 de 11 veces (especifidad del 81.8%) y predijo que Fran iba a ganar de manera acertada 12 de 13 veces (sensibilidad del 92.3%). A pesar de probarlo con pocos datos, el modelo parece tener una buena capacidad predictiva (accuracy del 87.5%).
 
 ## Conclusiones
 
