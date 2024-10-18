@@ -531,8 +531,7 @@ modelo_final = glm(fran_win1 ~ pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWo
 
 Finalmente, se generaron dudas con respecto a la significancia de la variable `opp_age` en el modelo, debido a que en la parte descriptiva parecía no influir significativamente en la respuesta y presenta un $p-value=0.11$ en el test de Wald. Para probar si esta variable es realmente significtiva, se realiza un test de razón de verosimilitud comparando el modelo propuesto con uno que no tenga la variable `opp_age`, el cual arroja un $p-value=0.10$, por lo que no se rechaza la hipótesis de que el efecto de esta variable es nulo. Por lo tanto se decide quitar esta variable del modelo:
 
-$logit(\pi_i)=ln(\frac{\pi_i}{1-\pi_i})= \beta_{0}+\beta_{1}*Fran1stWon_i+\beta_{2}*Opp1stWon_i+\beta_{3}*Fran2ndWon_i+\beta_{4}*Opp2ndWon_i+$ 
-$+\beta_{5}*FranBpWin+\beta_{6}*OppBpWin$
+$logit(\pi_i)=ln(\frac{\pi_i}{1-\pi_i})= \beta_{0}+\beta_{1}*Fran1stWon_i+\beta_{2}*Opp1stWon_i+\beta_{3}*Fran2ndWon_i+\beta_{4}*Opp2ndWon_i+$ $+\beta_{5}*FranBpWin+\beta_{6}*OppBpWin$
 
 ### Evaluación de Linealidad
 
@@ -626,8 +625,7 @@ anova(modelo_l2,modelo_l1, test="LRT")
 
 ```
 
-$logit(\pi_i)=ln(\frac{\pi_i}{1-\pi_i})= \beta_{0}+\beta_{1}*Fran1stWon_i+\beta_{2}*D_{(0.6,0.65)i}+\beta_{3}*D_{(0.65,0.7)i}+$
-$+\beta_{4}*D_{(0.7,0.75)i}+\beta_{5}*D_{(0.75,Inf)i}+\beta_{6}*Fran2ndWon_i+\beta_{7}*Opp2ndWon_i+\beta_{8}*FranBpWin+\beta_{9}*OppBpWin$
+$logit(\pi_i)=ln(\frac{\pi_i}{1-\pi_i})= \beta_{0}+\beta_{1}*Fran1stWon_i+\beta_{2}*D_{(0.6,0.65)i}+\beta_{3}*D_{(0.65,0.7)i}+$ $+\beta_{4}*D_{(0.7,0.75)i}+\beta_{5}*D_{(0.75,Inf)i}+\beta_{6}*Fran2ndWon_i+\beta_{7}*Opp2ndWon_i+\beta_{8}*FranBpWin+\beta_{9}*OppBpWin$
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
 modelo_final = glm(fran_win1 ~ pct_fran_1stWon + cat2 + pct_fran_2ndWon + 
@@ -638,8 +636,7 @@ summary(modelo_final)
 
 Y el modelo estimado:
 
-$logit(\hat{\pi_i})=ln(\frac{\hat{\pi_i}}{1-\hat\pi_i})= -16.23+36.19*Fran1stWon_i-3.86*D_{(0.6,0.65)i}-5.63*D_{(0.65,0.7)i}-5.20*D_{(0.7,0.75)i}-$
-$-12.43*D_{(0.75,Inf)i}+19.61*Fran2ndWon_i-26.49*Opp2ndWon_i+8.88*FranBpWin-7.40*OppBpWin$
+$logit(\hat{\pi_i})=ln(\frac{\hat{\pi_i}}{1-\hat\pi_i})= -16.23+36.19*Fran1stWon_i-3.86*D_{(0.6,0.65)i}-5.63*D_{(0.65,0.7)i}-5.20*D_{(0.7,0.75)i}-$ $-12.43*D_{(0.75,Inf)i}+19.61*Fran2ndWon_i-26.49*Opp2ndWon_i+8.88*FranBpWin-7.40*OppBpWin$
 
 ### Adecuación de la función de enlace
 
@@ -708,7 +705,6 @@ corrplot(mat_cor, type="upper", order="hclust", tl.col="black", tl.srt=45)
 ```
 
 Al ver el gráfico de las correlaciones se observa que no hay correlaciones altas entre las variablas explicativas, y al calcular los VIF todos dan menores a 2, con lo cual se concluye que no hay presencia de multicolinealidad.
-
 
 ## Interpretación y Resultados
 
