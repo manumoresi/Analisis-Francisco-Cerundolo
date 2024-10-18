@@ -479,7 +479,7 @@ De manera concordante con lo visto en el grafico anterior, se ve que las estadí
 
 ### Selección de variables
 
-Para modelar la probabilidad de que Fran gane el partido, se aplicará un modelo lineal general con enlace $logit$ y para decidir que variables resultan significativas en la respuesta, se realiza una selección de variables "paso a paso", con todas las variables definidas anteriormente. Para este procedimiento se utilizará la variable `dif_rank` en vez de la variable `opp_rank`, ya que parece más adecuado trabajar con la diferencia de ranking al momento del partido debido a que el ranking de Fran varía mucho desde su debut hasta el día de hoy.
+Para modelar la probabilidad de que Fran gane el partido, se aplicará un modelo lineal generalizado con enlace $logit$ y para decidir que variables resultan significativas en la respuesta, se realiza una selección de variables "paso a paso", con todas las variables definidas anteriormente. Para este procedimiento se utilizará la variable `dif_rank` en vez de la variable `opp_rank`, ya que parece más adecuado trabajar con la diferencia de ranking al momento del partido debido a que el ranking de Fran varía mucho desde su debut hasta el día de hoy.
 
 El método automático utilizado para esta selección de variables, se basa en la diferencia de AIC entre los modelos para decidir cual es modelo óptimo a utilizar.
 
