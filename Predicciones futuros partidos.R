@@ -35,3 +35,11 @@ pred_cer_vs_tsi
 # En base a las estadisticas promedio de los ultimos 5 partidos, la probabilidad estimada de que 
 # Cerundolo le gane a Tsisipas Diallo es de 0.005, y con un punto de corte de 0.5 el modelo predice 
 # que Fran pierde
+
+cer_vs_tsi2 = as.data.frame(cbind(44/71,57/74,25/40,21/46,2/7,3/12))
+colnames(cer_vs_tsi2) = c("pct_fran_1stWon","pct_opp_1stWon","pct_fran_2ndWon","pct_opp_2ndWon", "pct_fran_bp_wins","pct_opp_bp_wins")
+cer_vs_tsi2 <- cer_vs_tsi2 %>%
+  mutate(cat2= cut(pct_opp_1stWon, breaks = c(0, 0.6, 0.65, 0.7, 0.75, Inf)))
+
+pred_cer_vs_tsi2 <- predict(modelo_final, newdata = cer_vs_tsi2, type = "response")                           
+pred_cer_vs_tsi2
