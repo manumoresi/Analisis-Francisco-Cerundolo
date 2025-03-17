@@ -1,0 +1,4 @@
+cambiar variable de ranking por R = 8 - log_2(RANKING)
+
+usar los porcentajes de puntos ganados en primer y segundo servicio: % PW1st = % 1stIn * % 1stInWon
+                                                                     % PW2nd = % 2ndIn * % 2ndInWon
