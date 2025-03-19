@@ -204,7 +204,7 @@ cerundolo_final1$opp_bpFaced = ifelse(cerundolo_final1$winner_name == "Francisco
 
 #borramos las variables de winner y loser
 
-cerundolo_final1 = subset(cerundolo_final1, select = -c(winner_hand,winner_ht,winner_age,winner_rank,loser_rank,loser_hand,loser_ht,loser_age,w_ace,w_df,w_svpt,w_1stIn,w_1stWon,w_2ndWon,w_bpSaved,w_bpFaced,l_ace,l_df,l_svpt,l_1stIn,l_1stWon,l_2ndWon,l_bpSaved,l_bpFaced,fran_rank,opp_rank))
+cerundolo_final1 = subset(cerundolo_final1, select = -c(winner_hand,winner_ht,winner_age,winner_rank,loser_rank,loser_hand,loser_ht,loser_age,w_ace,w_df,w_svpt,w_1stIn,w_1stWon,w_2ndWon,w_bpSaved,w_bpFaced,l_ace,l_df,l_svpt,l_1stIn,l_1stWon,l_2ndWon,l_bpSaved,l_bpFaced))
 
 #Realizamos la transformacion de las variables: cant de servicios, cantidad de primeros servicios
 #en juego, cant de juegos de primer servicio ganados, cant de juegos de segundo servicio ganados,
@@ -421,10 +421,10 @@ g1=ggplot(cerundolo_final1) +
   facet_wrap(~fran_win)+
   # Punto en el valor 61 para el gráfico de la izquierda
   geom_point(data = subset(cerundolo_final1, fran_win == levels(cerundolo_final1$fran_win)[1]), 
-             aes(x = 61, y = 0), color = "blue", size = 3) +
+             aes(x = median(w, na.rm=TRUE), y = 0), color = "blue", size = 3) +
   # Punto en el valor 36 para el gráfico de la derecha
   geom_point(data = subset(cerundolo_final1, fran_win == levels(cerundolo_final1$fran_win)[2]), 
-             aes(x = 36, y = 0), color = "blue", size = 3)+
+             aes(x = median(l, na.rm=TRUE), y = 0), color = "blue", size = 3)+
   scale_fill_manual(values = c("Perdió"="steelblue1","Ganó"="steelblue4"))
 
 ggplotly(g1)
@@ -583,7 +583,7 @@ Para modelar la probabilidad de que Fran gane el partido, se aplicará un modelo
 El método automático utilizado para esta selección de variables, se basa en la diferencia de AIC entre los modelos para decidir cual es modelo óptimo a utilizar.
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
-cerundolo_modelo= subset(cerundolo_final1, select= c(surface,tourney_level,minutes,fran_win,opp_hand,opp_ht,opp_age,dif_rank,pct_fran_1stIn,pct_opp_1stIn,pct_fran_1stWon,pct_opp_1stWon,pct_fran_2ndWon,pct_opp_2ndWon,pct_fran_df,pct_opp_df,pct_fran_ace,pct_opp_ace,pct_fran_bp_wins,pct_opp_bp_wins,pct_fran_bp_saved,pct_opp_bp_saved))
+cerundolo_modelo= subset(cerundolo_final1, select= c(surface,tourney_level,minutes,fran_win,opp_hand,opp_ht,opp_age,dif_rank,pct_fran_1stIn,pct_opp_1stIn,pct_fran_1stWon,pct_opp_1stWon,pct_fran_2ndIn,pct_opp_2ndIn,pct_fran_2ndWon,pct_opp_2ndWon,pct_fran_df,pct_opp_df,pct_fran_ace,pct_opp_ace,pct_fran_bp_wins,pct_opp_bp_wins,pct_fran_bp_saved,pct_opp_bp_saved))
 
 cerundolo_modelo = na.omit(cerundolo_modelo)
 ```
@@ -606,9 +606,13 @@ modelo_final = glm(fran_win1 ~ opp_age + pct_fran_1stWon + pct_opp_1stWon + pct_
 
 summary(modelo_final)
 
+modelo_final_2 = glm(fran_win1 ~ opp_age + pct_fran_1stIn + pct_opp_1stIn + pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo,family = binomial(link="logit"))
+
+summary(modelo_final_2)
 
 # Test de Hosmer-Lemeshow usando hltest de glmtoolbox
 hltest(modelo_final)
+hltest(modelo_final_2)
 
 #El modelo ajusta
 
@@ -619,13 +623,13 @@ $logit(\pi_i)=ln(\frac{\pi_i}{1-\pi_i})= \beta_{0}+\beta_{1}*OppAge_i+\beta_{2}*
 Se realizó el test de Hosmer-Lemeshow para probar la bondad de ajuste del modelo, y se ubtuvo un $p-value=0.83$, por lo que se puede concluir que el modelo ajusta.
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
-modelo_cuasi_final = glm(fran_win1 ~ pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo,family = binomial(link="logit"))
+modelo_cuasi_final = glm(fran_win1 ~ pct_fran_1stIn + pct_opp_1stIn + pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo,family = binomial(link="logit"))
 
-anova(modelo_cuasi_final, modelo_final, test="LRT")
+anova(modelo_cuasi_final, modelo_final_2, test="LRT")
 
 #Podríamos sacarla del modelo
 
-modelo_final = glm(fran_win1 ~ pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo,family = binomial(link="logit"))
+modelo_final_2 = glm(fran_win1 ~ pct_fran_1stIn + pct_opp_1stIn + pct_fran_1stWon + pct_opp_1stWon + pct_fran_2ndWon + pct_opp_2ndWon + pct_fran_bp_wins + pct_opp_bp_wins, data=cerundolo_modelo,family = binomial(link="logit"))
 ```
 
 Finalmente, se generaron dudas con respecto a la significancia de la variable `opp_age` en el modelo, debido a que en la parte descriptiva parecía no influir significativamente en la respuesta y presenta un $p-value=0.11$ en el test de Wald. Para probar si esta variable es realmente significtiva, se realiza un test de razón de verosimilitud comparando el modelo propuesto con uno que no tenga la variable `opp_age`, el cual arroja un $p-value=0.10$, por lo que no se rechaza la hipótesis de que el efecto de esta variable es nulo. Por lo tanto se decide quitar esta variable del modelo:
@@ -637,6 +641,8 @@ $logit(\pi_i)=ln(\frac{\pi_i}{1-\pi_i})= \beta_{0}+\beta_{1}*Fran1stWon_i+\beta_
 El modelo presentado incorpora las seis variables expicativas de forma lineal, entonces se debe evaluar si esto es adecuado. Se realizan los test correspondientes y se observa que la única variable que no presenta un comportamiento lineal es `pct_opp_1stWon`, por lo que el modelo final incorpora esta variable a través de Dummies. El modelo final resulta:
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+
+## REHACER ##
 
 cerundolo_modelo <- cerundolo_modelo %>%
   mutate(cat1= cut(pct_fran_1stWon, breaks = c(0, 0.59, 0.65, 0.693, 0.75, Inf)),
